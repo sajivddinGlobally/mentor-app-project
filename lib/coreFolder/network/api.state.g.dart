@@ -571,12 +571,12 @@ class _APIStateNetwork implements APIStateNetwork {
   }
 
   @override
-  Future<GetcreatelistModel> myList() async {
+  Future<GetMyListModel> myList() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<GetcreatelistModel>(
+    final _options = _setStreamType<GetMyListModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -587,9 +587,9 @@ class _APIStateNetwork implements APIStateNetwork {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late GetcreatelistModel _value;
+    late GetMyListModel _value;
     try {
-      _value = GetcreatelistModel.fromJson(_result.data!);
+      _value = GetMyListModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -1230,6 +1230,29 @@ class _APIStateNetwork implements APIStateNetwork {
           .compose(
             _dio.options,
             '/apply',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<dynamic>> mentorSend(MentorrequestApplyBody body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _options = _setStreamType<HttpResponse<dynamic>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/send',
             queryParameters: queryParameters,
             data: _data,
           )

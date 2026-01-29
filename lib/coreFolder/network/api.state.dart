@@ -29,6 +29,8 @@ import 'package:educationapp/coreFolder/Model/trendingSkillExpertResModel.dart';
 import 'package:educationapp/coreFolder/Model/userProfileResModel.dart';
 import 'package:educationapp/coreFolder/Model/verifyOrChangePassBodyModel.dart';
 import 'package:retrofit/retrofit.dart';
+import '../Model/MentorSendBody.dart';
+import '../Model/MyListModel.dart';
 import '../Model/PaymentCreateModel.dart';
 import '../Model/PaymentVerifyModel.dart';
 import '../Model/VerifyResponseModel.dart';
@@ -144,7 +146,7 @@ abstract class APIStateNetwork {
   Future<SkillsModel> getAllSkill();
 
   @GET('/student/my-list')
-  Future<GetcreatelistModel> myList();
+  Future<GetMyListModel> myList();
 
   @GET('/profiles')
   Future<GetUserProfileModel> profiles();
@@ -227,6 +229,10 @@ abstract class APIStateNetwork {
   @POST("/apply")
   Future<HttpResponse<dynamic>> applyOrSendNotification(
       @Body() ApplybodyModel body);
+
+  @POST("/send")
+  Future<HttpResponse<dynamic>> mentorSend(
+      @Body() MentorrequestApplyBody body);
 
   @GET("/student/mentor")
   Future<MentorNotificationResModel> mentorSideNotification();

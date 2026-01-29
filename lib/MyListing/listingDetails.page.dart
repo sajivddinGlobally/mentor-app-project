@@ -874,6 +874,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -989,49 +990,52 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
-    final cardColor = isDark ? const Color(0xFF2A2A2A) : Colors.white;
-    final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    final cardColor =
+        // isDark ? const Color(0xFF2A2A2A) : Colors.white;
+        // isDark ? const Color(0xFF2A2A2A) :
+        Colors.white;
+    // final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    final textColor = const Color(0xFF1B1B1B);
     final secondaryTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
-    final bgColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    // final bgColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    final bgColor = const Color(0xFF1B1B1B);
+    ///////////////////////////////
+    final profile = ref.read(userProfileController);
 
+    final box = Hive.box('userdata');
+    int id = box.get('userid');
+
+    /////////////////////////
+
+// Sabse pehle current user ki ID nikal lo (Riverpod / Provider / Hive se jo bhi use kar rahe ho)
+    final currentUserId =
+        profile.value?.data?.id; // ← yeh change karna padega apne hisaab se
+// ya Hive se:
+// final currentUserId = box.get('userid');
+
+    bool isMyListing = false;
+    if (currentUserId != null &&
+        widget.item.mentors != null &&
+        widget.item.mentors!.isNotEmpty) {
+      isMyListing =
+          widget.item.mentors!.any((mentor) => mentor.id == currentUserId);
+    }
     return Scaffold(
-      //  backgroundColor: bgColor,
+      backgroundColor: isDark ? Colors.white : const Color(0xFF1B1B1B),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
-          child: Container(
-            margin: EdgeInsets.only(left: 10.w, top: 10, bottom: 10),
-            width: 3.w, // ← yeh chhota kiya
-            height: 3.h, // ← yeh chhota kiya
-            decoration: BoxDecoration(
-              color: isDark ? bgColor : Colors.white,
-              shape: BoxShape.circle,
-              border:
-                  Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-            ),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 6), // ← thoda kam kiya
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  size: 20,
-                  color: isDark ? Colors.black : const Color(0xff9088F1),
-                ),
-              ),
-            ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 6), // ← thoda kam kiya
+            child: Icon(Icons.arrow_back_ios,
+                size: 20,
+                // color: isDark ? Colors.black : const Color(0xff9088F1),
+                color: Colors.white),
           ),
         ),
-        // IconButton(
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //     icon: Icon(Icons.arrow_back,
-        //         color:
-        //             // themeMode == ThemeMode.dark ? Color(0xFF1B1B1B) :
-        //             Colors.white)),
         backgroundColor: const Color(0xff9088F1),
         elevation: 0,
         title: Text(
@@ -1085,7 +1089,7 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50.r),
                       child: Image.network(
-                        widget.item.student?.profilePic ??
+                        widget.item.student!.profilePic ??
                             "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
                         height: 80.h,
                         width: 80.w,
@@ -1114,7 +1118,7 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.item.student?.fullName ?? "Student",
+                          widget.item.student!.fullName ?? "Student",
                           style: GoogleFonts.roboto(
                               fontSize: 22.sp,
                               fontWeight: FontWeight.w700,
@@ -1361,7 +1365,11 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
             // hasApplied
 
             !widget.data
-                ? status == 1
+                ?
+
+                // widget.item.mentors!.isEmpty ||  widget.item.mentors!.any((mentor) => mentor.id != id)
+
+                isMyListing
                     ? Column(
                         children: [
                           _buildActionButton(
@@ -1488,7 +1496,9 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
             !widget.data
                 ? Row(
                     children: [
-                      status == 1
+                      // widget.item.notificationStatus=="success"
+                      // status == 1
+                      isMyListing
                           ? SizedBox()
                           : Expanded(
                               child: ElevatedButton.icon(
@@ -1612,7 +1622,7 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
                                             color: Colors.white),
                                       ),
                               ),
-                            ),
+                            )
                     ],
                   )
                 : SizedBox()
@@ -1662,8 +1672,12 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
   }) {
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
-    final secondaryTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    // final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    final textColor = const Color(0xFF1B1B1B);
+    // final secondaryTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    final secondaryTextColor =
+        // isDark ? Colors.grey[400]! :
+        Colors.grey[600]!;
 
     return Container(
       padding: EdgeInsets.all(12.w),
