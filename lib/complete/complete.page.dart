@@ -689,6 +689,150 @@ class _ProfileCompletionWidgetState
                             ),
                             SizedBox(height: 20.h),
 
+                            // FormField<List<String>>(
+                            //   initialValue: selectedSkills,
+                            //   validator: (value) =>
+                            //       (value == null || value.isEmpty)
+                            //           ? "Required"
+                            //           : null,
+                            //   builder: (field) {
+                            //     return Padding(
+                            //       padding:
+                            //           EdgeInsets.symmetric(horizontal: 28.w),
+                            //       child: Column(
+                            //         crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //         children: [
+                            //           TypeAheadField<dynamic>(
+                            //             builder:
+                            //                 (context, controller, focusNode) {
+                            //               return TextField(
+                            //                 style: TextStyle(
+                            //                   color: themeMode == ThemeMode.dark
+                            //                       ? Colors.white
+                            //                       : Colors.black,
+                            //                 ),
+                            //                 controller: controller,
+                            //                 focusNode: focusNode,
+                            //                 decoration: InputDecoration(
+                            //                   hintText: "Select Skills",
+                            //                   hintStyle: TextStyle(
+                            //                     color:
+                            //                         themeMode == ThemeMode.dark
+                            //                             ? Colors.black
+                            //                             : Colors.white,
+                            //                   ),
+                            //                   // ... aapka existing decoration style ...
+                            //                   border: OutlineInputBorder(
+                            //                       borderRadius:
+                            //                           BorderRadius.circular(
+                            //                               40.r)),
+                            //                 ),
+                            //               );
+                            //             },
+
+                            //             /// 👇 YAHAN CHANGE KARNA HAI (FIXED)
+                            //             decorationBuilder: (context, child) {
+                            //               return Material(
+                            //                 color: themeMode == ThemeMode.dark
+                            //                     ? Colors.grey
+                            //                         .shade900 // ✅ DARK MODE background
+                            //                     : Colors
+                            //                         .white, // ✅ LIGHT MODE background
+                            //                 elevation: 4,
+                            //                 borderRadius:
+                            //                     BorderRadius.circular(12),
+                            //                 child: child,
+                            //               );
+                            //             },
+
+                            //             suggestionsCallback: (pattern) {
+                            //               final query = pattern.toLowerCase();
+                            //               return snapshot.data
+                            //                   .where((skill) =>
+                            //                       skill.title
+                            //                           .toLowerCase()
+                            //                           .contains(query) &&
+                            //                       !selectedSkills
+                            //                           .contains(skill.title))
+                            //                   .toList();
+                            //             },
+                            //             itemBuilder: (context, suggestion) {
+                            //               return ListTile(
+                            //                   tileColor:
+                            //                       themeMode == ThemeMode.dark
+                            //                           ? Colors.grey.shade900
+                            //                           : Colors.white,
+                            //                   title: Text(
+                            //                     suggestion.title,
+                            //                     style: TextStyle(
+                            //                       color: themeMode ==
+                            //                               ThemeMode.dark
+                            //                           ? Colors.white
+                            //                           : Colors.black,
+                            //                     ),
+                            //                   ));
+                            //             },
+                            //             onSelected: (suggestion) {
+                            //               setState(() {
+                            //                 // Duplicate check double safety ke liye
+                            //                 if (!selectedSkills
+                            //                     .contains(suggestion.title)) {
+                            //                   selectedSkills
+                            //                       .add(suggestion.title);
+                            //                   selectedSkillIds.add(
+                            //                       suggestion.id.toString());
+                            //                 }
+                            //               });
+
+                            //               field.didChange(selectedSkills);
+                            //             },
+                            //           ),
+                            //           SizedBox(height: 8.h),
+                            //           Wrap(
+                            //             spacing: 8,
+                            //             runSpacing: 8,
+                            //             children: selectedSkills
+                            //                 .asMap()
+                            //                 .entries
+                            //                 .map((entry) {
+                            //               int index = entry.key;
+                            //               String name = entry.value;
+
+                            //               return Chip(
+                            //                 deleteIconColor:
+                            //                     themeMode == ThemeMode.dark
+                            //                         ? Colors.black
+                            //                         : Colors.white,
+                            //                 backgroundColor:
+                            //                     themeMode == ThemeMode.dark
+                            //                         ? Colors.white
+                            //                         : Colors.black,
+                            //                 label: Text(
+                            //                   name,
+                            //                   style: GoogleFonts.roboto(
+                            //                     color:
+                            //                         themeMode == ThemeMode.dark
+                            //                             ? Colors.black
+                            //                             : Colors.white,
+                            //                   ),
+                            //                 ),
+                            //                 onDeleted: () {
+                            //                   setState(() {
+                            //                     selectedSkills.removeAt(index);
+                            //                     selectedSkillIds
+                            //                         .removeAt(index);
+                            //                   });
+                            //                   field.didChange(selectedSkills);
+                            //                 },
+                            //               );
+                            //             }).toList(),
+                            //           )
+                            //         ],
+                            //       ),
+                            //     );
+                            //   },
+                            // ),
                             FormField<List<String>>(
                               initialValue: selectedSkills,
                               validator: (value) =>
@@ -696,6 +840,18 @@ class _ProfileCompletionWidgetState
                                       ? "Required"
                                       : null,
                               builder: (field) {
+                                // Variable check karne ke bajaye seedha context se pucho
+                                bool isDarkMode =
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark;
+
+                                // Explicit colors define karo
+                                Color suggestionBg = isDarkMode
+                                    ? Colors.grey.shade900
+                                    : Colors.white;
+                                Color suggestionText =
+                                    isDarkMode ? Colors.white : Colors.black;
+
                                 return Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 28.w),
@@ -707,20 +863,31 @@ class _ProfileCompletionWidgetState
                                         builder:
                                             (context, controller, focusNode) {
                                           return TextField(
-                                            style:
-                                                TextStyle(color: Colors.black),
+                                            style: TextStyle(
+                                                color: suggestionText),
                                             controller: controller,
                                             focusNode: focusNode,
                                             decoration: InputDecoration(
                                               hintText: "Select Skills",
                                               hintStyle: TextStyle(
-                                                  color: Colors.black),
-                                              // ... aapka existing decoration style ...
+                                                  color: isDarkMode
+                                                      ? Colors.white70
+                                                      : Colors.black54),
                                               border: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           40.r)),
                                             ),
+                                          );
+                                        },
+                                        decorationBuilder: (context, child) {
+                                          return Material(
+                                            elevation: 4,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            color:
+                                                suggestionBg, // Safed background in light mode
+                                            child: child,
                                           );
                                         },
                                         suggestionsCallback: (pattern) {
@@ -735,12 +902,20 @@ class _ProfileCompletionWidgetState
                                               .toList();
                                         },
                                         itemBuilder: (context, suggestion) {
-                                          return ListTile(
-                                              title: Text(suggestion.title));
+                                          // ListTile ke bajaye Container use karo color lock karne ke liye
+                                          return Container(
+                                            color: suggestionBg,
+                                            child: ListTile(
+                                              title: Text(
+                                                suggestion.title,
+                                                style: TextStyle(
+                                                    color: suggestionText),
+                                              ),
+                                            ),
+                                          );
                                         },
                                         onSelected: (suggestion) {
                                           setState(() {
-                                            // Duplicate check double safety ke liye
                                             if (!selectedSkills
                                                 .contains(suggestion.title)) {
                                               selectedSkills
@@ -749,7 +924,6 @@ class _ProfileCompletionWidgetState
                                                   suggestion.id.toString());
                                             }
                                           });
-
                                           field.didChange(selectedSkills);
                                         },
                                       ),
@@ -763,9 +937,20 @@ class _ProfileCompletionWidgetState
                                             .map((entry) {
                                           int index = entry.key;
                                           String name = entry.value;
-
                                           return Chip(
-                                            label: Text(name),
+                                            deleteIconColor: isDarkMode
+                                                ? Colors.black
+                                                : Colors.white,
+                                            backgroundColor: isDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                            label: Text(
+                                              name,
+                                              style: GoogleFonts.roboto(
+                                                  color: isDarkMode
+                                                      ? Colors.black
+                                                      : Colors.white),
+                                            ),
                                             onDeleted: () {
                                               setState(() {
                                                 selectedSkills.removeAt(index);
@@ -782,131 +967,6 @@ class _ProfileCompletionWidgetState
                                 );
                               },
                             ),
-
-                            // FormField<List<String>>(
-                            //   initialValue: selectedSkills,
-                            //   validator: (value) =>
-                            //       (value == null || value.isEmpty)
-                            //           ? "Required"
-                            //           : null,
-                            //   builder: (field) {
-                            //     return Padding(
-                            //       padding:
-                            //           EdgeInsets.symmetric(horizontal: 28.w),
-                            //       child: Column(
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           TypeAheadField<dynamic>(
-                            //             // Assume yeh typeahead_flutter package se hai
-                            //             builder:
-                            //                 (context, controller, focusNode) {
-                            //               return TextField(
-                            //                 controller: controller,
-                            //                 focusNode: focusNode,
-                            //                 decoration: InputDecoration(
-                            //                   hintText: "Select Skills",
-                            //                   errorText: field.hasError
-                            //                       ? field.errorText
-                            //                       : null,
-                            //                   border: OutlineInputBorder(
-                            //                     borderRadius:
-                            //                         BorderRadius.circular(40.r),
-                            //                   ),
-                            //                 ),
-                            //               );
-                            //             },
-                            //             suggestionsCallback: (pattern) async {
-                            //               // Async bana diya agar FutureBuilder hai
-                            //               if (pattern.isEmpty) return [];
-                            //               final query = pattern.toLowerCase();
-                            //               // Assume snapshot.data yahan available hai (FutureBuilder se)
-                            //               return snapshot.data
-                            //                       ?.where((skill) =>
-                            //                           skill.title
-                            //                               .toLowerCase()
-                            //                               .contains(query) &&
-                            //                           !selectedSkills.contains(
-                            //                               skill.title))
-                            //                       .toList() ??
-                            //                   [];
-                            //             },
-                            //             itemBuilder: (context, suggestion) {
-                            //               return ListTile(
-                            //                   title: Text(suggestion.title));
-                            //             },
-                            //             onSelected: (suggestion) {
-                            //               // Fix: Spread operator se new list banao, old ko preserve karo
-                            //               setState(() {
-                            //                 if (!selectedSkills
-                            //                     .contains(suggestion.title)) {
-                            //                   selectedSkills = [
-                            //                     ...selectedSkills,
-                            //                     suggestion.title
-                            //                   ];
-                            //                   selectedSkillIds = [
-                            //                     ...selectedSkillIds,
-                            //                     suggestion.id.toString()
-                            //                   ];
-                            //                   log('Added: ${suggestion.title} | Total Skills: ${selectedSkills.length}'); // Debug
-                            //                 }
-                            //               });
-                            //               field.didChange(selectedSkills);
-                            //               // Controller clear to avoid text lingering
-                            //               // controller.text = '';
-                            //               // controller.clear();
-                            //             },
-                            //           ),
-                            //           SizedBox(height: 8.h),
-                            //           Wrap(
-                            //             spacing: 8,
-                            //             runSpacing: 8,
-                            //             children: selectedSkills
-                            //                 .asMap()
-                            //                 .entries
-                            //                 .map((entry) {
-                            //               final index = entry.key;
-                            //               final name = entry.value;
-                            //               return Chip(
-                            //                 key: ValueKey(
-                            //                     '$name-$index'), // Better key for rebuild
-                            //                 label: Text(name,
-                            //                     style: TextStyle(fontSize: 12)),
-                            //                 onDeleted: () {
-                            //                   setState(() {
-                            //                     // Spread se remove karo by index
-                            //                     selectedSkills = selectedSkills
-                            //                         .where((i) => i != index)
-                            //                         .toList();
-                            //                     selectedSkillIds =
-                            //                         selectedSkillIds
-                            //                             .where(
-                            //                                 (i) => i != index)
-                            //                             .toList();
-                            //                     print(
-                            //                         'Removed: $name | Remaining: ${selectedSkills.length}'); // Debug
-                            //                   });
-                            //                   field.didChange(selectedSkills);
-                            //                 },
-                            //               );
-                            //             }).toList(),
-                            //           ),
-                            //           if (field.hasError)
-                            //             Padding(
-                            //               padding: const EdgeInsets.only(
-                            //                   top: 5, left: 12),
-                            //               child: Text(
-                            //                 field.errorText ?? "",
-                            //                 style: TextStyle(
-                            //                     color: Colors.red,
-                            //                     fontSize: 12),
-                            //               ),
-                            //             ),
-                            //         ],
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
                             if (userType == "Mentor" ||
                                 userType == "Professional") ...[
                               Container(
@@ -1277,11 +1337,17 @@ class _ProfileCompletionWidgetState
                                 onSaved: (_) => addInterest(),
                                 decoration: InputDecoration(
                                   hintText: "Add Interest",
-                                  helperStyle: TextStyle(color: Colors.black),
+                                  hintStyle: TextStyle(
+                                    color: themeMode == ThemeMode.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       Icons.add,
-                                      color: Colors.black,
+                                      color: themeMode == ThemeMode.dark
+                                          ? Colors.black
+                                          : Colors.white,
                                     ),
                                     onPressed: addInterest,
                                   ),
@@ -1330,8 +1396,24 @@ class _ProfileCompletionWidgetState
                                   runSpacing: 8,
                                   children: interests.map((item) {
                                     return Chip(
-                                      label: Text(item),
-                                      deleteIcon: Icon(Icons.close),
+                                      backgroundColor:
+                                          themeMode == ThemeMode.dark
+                                              ? Colors.white
+                                              : Colors.black,
+                                      label: Text(
+                                        item,
+                                        style: TextStyle(
+                                          color: themeMode == ThemeMode.dark
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                      deleteIcon: Icon(
+                                        Icons.close,
+                                        color: themeMode == ThemeMode.dark
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
                                       onDeleted: () {
                                         setState(() {
                                           interests.remove(item);
