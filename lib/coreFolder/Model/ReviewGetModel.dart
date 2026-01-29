@@ -109,6 +109,7 @@ class Review {
   NameWiseRating? nameWiseRating;
   List<dynamic> skills;
   DateTime? createdAt;
+  String? fullName;
 
   Review({
     this.userId,
@@ -119,6 +120,7 @@ class Review {
     this.nameWiseRating,
     required this.skills,
     this.createdAt,
+    this.fullName,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) => Review(
@@ -127,6 +129,7 @@ class Review {
         description: json["description"],
         title: json["title"],
         name: json["name"],
+        fullName: json['full_name'],
         nameWiseRating: json["name_wise_rating"] == null
             ? null
             : NameWiseRating.fromJson(
@@ -146,6 +149,7 @@ class Review {
         "name_wise_rating": nameWiseRating?.toJson(),
         "skills": skills,
         "created_at": createdAt?.toIso8601String(),
+        "full_name": fullName,
       };
 }
 

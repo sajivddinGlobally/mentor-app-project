@@ -1331,7 +1331,7 @@ class _FindCompanyPageState extends ConsumerState<FindCompanyPage> {
 
           // Search Bar (ab skill wise search karega)
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: TextField(
               controller: _searchController,
               style: GoogleFonts.roboto(color: Colors.white, fontSize: 20.sp),
@@ -1377,7 +1377,7 @@ class _FindCompanyPageState extends ConsumerState<FindCompanyPage> {
 
           // Dropdowns
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: dropDownData.when(
               data: (dropdown) {
                 final skills = <String>["All"];
@@ -1581,7 +1581,7 @@ class _FindCompanyPageState extends ConsumerState<FindCompanyPage> {
   Widget _appBar() {
     final themeMode = ref.watch(themeProvider);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -1593,12 +1593,15 @@ class _FindCompanyPageState extends ConsumerState<FindCompanyPage> {
               decoration: const BoxDecoration(
                   color: Colors.white, shape: BoxShape.circle),
               child: Center(
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  size: 20,
-                  color: themeMode == ThemeMode.dark
-                      ? const Color(0xFF1B1B1B)
-                      : null,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 8.w),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 20,
+                    color: themeMode == ThemeMode.dark
+                        ? const Color(0xFF1B1B1B)
+                        : null,
+                  ),
                 ),
               ),
             ),

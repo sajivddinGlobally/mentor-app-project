@@ -738,7 +738,7 @@ class _FindCollegePageState extends ConsumerState<FindCollegePage> {
 
           // App Bar
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -752,12 +752,15 @@ class _FindCollegePageState extends ConsumerState<FindCollegePage> {
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        size: 20,
-                        color: themeMode == ThemeMode.dark
-                            ? const Color(0xFF1B1B1B)
-                            : null,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 8.w),
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          size: 20,
+                          color: themeMode == ThemeMode.dark
+                              ? const Color(0xFF1B1B1B)
+                              : null,
+                        ),
                       ),
                     ),
                   ),
@@ -791,7 +794,7 @@ class _FindCollegePageState extends ConsumerState<FindCollegePage> {
 
           // Search Bar
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: TextField(
               controller: _searchController,
               style: GoogleFonts.roboto(color: Colors.white, fontSize: 20.sp),
@@ -837,7 +840,7 @@ class _FindCollegePageState extends ConsumerState<FindCollegePage> {
 
           // Dropdowns
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: dropDownData.when(
               data: (dropdown) {
                 // Safe conversion to String list

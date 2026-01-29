@@ -3367,7 +3367,7 @@ class _ProfileCompletionWidgetState
                                                       style: IconButton.styleFrom(
                                                           backgroundColor:
                                                               Color(
-                                                                  0xFFA8E6CF)),
+                                                                  0xFFDCF881)),
                                                       onPressed: () {
                                                         showImage();
                                                       },
@@ -3502,7 +3502,7 @@ class _ProfileCompletionWidgetState
                                                       style: IconButton.styleFrom(
                                                           backgroundColor:
                                                               Color(
-                                                                  0xFFA8E6CF)),
+                                                                  0xFFDCF881)),
                                                       onPressed: () {
                                                         showImage1();
                                                       },
