@@ -173,7 +173,6 @@ class _MyAppState extends ConsumerState<MyApp> {
     _checkToken();
     _setupConnectivityListener();
   }
-
   void _setupConnectivityListener() {
     _subscription = Connectivity().onConnectivityChanged.listen((results) {
       final hasNoInternet = results.contains(ConnectivityResult.none);
@@ -208,13 +207,11 @@ class _MyAppState extends ConsumerState<MyApp> {
       }
     });
   }
-
   @override
   void dispose() {
     _subscription.cancel(); // IMPORTANT FIX
     super.dispose();
   }
-
   Future<void> _checkToken() async {
     var box = Hive.box('userdata');
     var savedToken = box.get('token');
@@ -240,7 +237,6 @@ class _MyAppState extends ConsumerState<MyApp> {
       setState(() => token = savedToken);
     }
   }
-
   Future<bool> _isTokenExpired(String token) async {
     try {
       // Simple example — you can decode JWT or call /me API to verify
@@ -256,7 +252,6 @@ class _MyAppState extends ConsumerState<MyApp> {
       return true;
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final themeModeProvider = ref.watch(themeProvider);

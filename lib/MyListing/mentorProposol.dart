@@ -939,17 +939,20 @@ class MentorProposalPageNew extends ConsumerWidget {
     );
   }
 }*/
+/*
 
 
 import 'dart:developer';
 import 'package:educationapp/coreFolder/Controller/themeController.dart';
 import 'package:educationapp/coreFolder/Model/MyListModel.dart';
 import 'package:educationapp/home/MentorDetail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Profile/profileScreen.dart';
 import '../coreFolder/Controller/myListController.dart';
@@ -958,13 +961,14 @@ import '../coreFolder/Controller/userProfileController.dart';
 import '../coreFolder/Model/MentorSendBody.dart';
 import '../coreFolder/network/api.state.dart';
 import '../coreFolder/utils/preety.dio.dart';
+import '../home/chating.page.dart';
 
 class MentorProposalPageNew extends ConsumerStatefulWidget {
-  final DatumMyList item;
+  final int id;
 
   const MentorProposalPageNew({
     super.key,
-    required this.item,
+    required this.id,
   });
 
   @override
@@ -981,6 +985,9 @@ class _MentorProposalPageNewState extends ConsumerState<MentorProposalPageNew> {
   @override
   void initState() {
     super.initState();
+
+
+
     // Sab mentors ko shuru mein pending (0) set kar do
     for (var mentor in widget.item.mentors ?? []) {
       if (mentor.id != null) {
@@ -991,8 +998,10 @@ class _MentorProposalPageNewState extends ConsumerState<MentorProposalPageNew> {
 
   @override
   Widget build(BuildContext context) {
- /*   final themeMode = ref.watch(themeProvider);*/
+ */
+/*   final themeMode = ref.watch(themeProvider);*//*
 
+    final savedListAsync = ref.watch(myListController);
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
     final cardColor =
@@ -1483,39 +1492,145 @@ class _MentorProposalPageNewState extends ConsumerState<MentorProposalPageNew> {
 
 
 
-                      if (mentor.mentor_status!=null)
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            elevation: 1,
-                            minimumSize: Size(175.w, 45.h),
-                            backgroundColor: Color(0xff9088F1),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                          ).copyWith(
-                            overlayColor:
-                            MaterialStateProperty.resolveWith<Color?>(
-                                  (states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.white.withOpacity(0.25);
-                                }
-                                return null;
+                      if (mentor.mentor_status!=null&&mentor.mentor_status=="Accept")
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 1,
+                                minimumSize: Size(175.w, 45.h),
+                                backgroundColor: Color(0xff9088F1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ).copyWith(
+                                overlayColor:
+                                MaterialStateProperty.resolveWith<Color?>(
+                                      (states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.white.withOpacity(0.25);
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              onPressed: (){
+
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext dialogContext) {
+                                    return AlertDialog(
+                                      title: Text("Call Student"),
+                                      content:
+                                      Text("Do you want to call ${mentor.phone_number}?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(dialogContext)
+                                                .pop(); // Dialog close
+                                          },
+                                          child: Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            Navigator.of(dialogContext)
+                                                .pop(); // Dialog close
+
+                                            // Actual phone call
+                                            final Uri launchUri = Uri(
+                                              scheme: 'tel',
+                                              path: mentor.phone_number,
+                                            );
+                                            if (await canLaunchUrl(launchUri)) {
+                                              await launchUrl(launchUri);
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        "Could not launch dialer")),
+                                              );
+                                            }
+
+                                            // Agar call karne ke baad koi new screen navigate karna hai toh yeh karo
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => YourNewScreen(student: widget.item.student!),
+                                            //   ),
+                                            // );
+                                          },
+                                          child: Text(
+                                            "Call",
+                                            style: TextStyle(color: Colors.teal),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               },
+
+                                  child:  Text(
+                                      mentor.phone_number??"",
+                                style: GoogleFonts.roboto(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white),
+                              ),
                             ),
-                          ),
-                          onPressed: (){
 
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 1,
+                                minimumSize: Size(175.w, 45.h),
+                                backgroundColor: Color(0xff9088F1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                ),
+                              ).copyWith(
+                                overlayColor:
+                                MaterialStateProperty.resolveWith<Color?>(
+                                      (states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.white.withOpacity(0.25);
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              onPressed: (){
 
+                                final profile =
+                                ref.read(userProfileController);
 
-                          },
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => ChatingPage(
+                                          name: mentor.name??
+                                              "N/A",
+                                          id: profile.value!.data!.id.toString(),
+                                          otherUesrid:mentor.id.toString()
+
+                                      ),
+                                    ));
+
+                              },
 
                               child:  Text(
-          mentor.phone_number??"",
-                            style: GoogleFonts.roboto(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white),
-                          ),
+                                "Message",
+                                style: GoogleFonts.roboto(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white),
+                              ),
+                            ),
+
+                          ],
                         ),
 
                     ],
@@ -1528,4 +1643,870 @@ class _MentorProposalPageNewState extends ConsumerState<MentorProposalPageNew> {
       ),
     );
   }
+}*/
+/*
+
+import 'dart:developer';
+import 'package:educationapp/coreFolder/Controller/themeController.dart';
+import 'package:educationapp/coreFolder/Model/MyListModel.dart'; // ← your GetMyListModel
+import 'package:educationapp/home/MentorDetail.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../coreFolder/Controller/myListController.dart';
+import '../coreFolder/Controller/myListingController.dart';
+import '../coreFolder/Controller/userProfileController.dart';
+import '../coreFolder/Model/MentorSendBody.dart';
+import '../coreFolder/network/api.state.dart';
+import '../coreFolder/utils/preety.dio.dart';
+import '../home/chating.page.dart';
+
+class MentorProposalPageNew extends ConsumerStatefulWidget {
+  final int proposalId; // ← renamed for clarity
+
+  const MentorProposalPageNew({
+    super.key,
+    required this.proposalId,
+  });
+
+  @override
+  ConsumerState<MentorProposalPageNew> createState() => _MentorProposalPageNewState();
+}
+
+class _MentorProposalPageNewState extends ConsumerState<MentorProposalPageNew> {
+  bool isAccepting = false;
+  bool isRejecting = false;
+
+  // We'll store the matched proposal here after filtering
+  DatumMyList? _selectedProposal;
+
+  @override
+  void initState() {
+    super.initState();
+    // Optional: you can listen in build or use ref.watch → see below
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final myListAsync = ref.watch(myListController); // List of all proposals
+    final themeMode = ref.watch(themeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+
+    final bgColor = isDark ? const Color(0xFF1B1B1B) : Colors.white;
+    final cardBg = isDark ? Colors.white : const Color(0xFF2A2A2A);
+    final textColor = isDark ? const Color(0xFF1B1B1B) : Colors.white;
+    final secondaryText = isDark ? Colors.grey[600]! : Colors.grey[400]!;
+
+    return Scaffold(
+      backgroundColor:
+      themeMode == ThemeMode.dark ? Colors.white : const Color(0xFF1B1B1B),
+
+      appBar: AppBar(
+        backgroundColor: const Color(0xff9088F1),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          "Mentor Proposals",
+          style: GoogleFonts.roboto(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      body: myListAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text("Error: $err")),
+        data: (GetMyListModel model) {
+          // Find the proposal that matches widget.proposalId
+          final proposal = model.data?.firstWhere(
+                (p) => p.id == widget.proposalId,
+            orElse: () => DatumMyList(), // empty fallback
+          );
+
+          if (proposal == null || proposal.id == null) {
+            return Center(
+              child: Text(
+                "Proposal not found",
+                style: GoogleFonts.roboto(fontSize: 16.sp, color: Colors.grey),
+              ),
+            );
+          }
+
+          _selectedProposal = proposal; // store for later use if needed
+
+          final mentors = proposal.mentors ?? [];
+
+          if (mentors.isEmpty) {
+            return Center(
+              child: Text(
+                "No mentor proposals yet...",
+                style: GoogleFonts.roboto(fontSize: 16.sp, color: Colors.grey),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            itemCount: mentors.length,
+            itemBuilder: (context, index) {
+              final mentor = mentors[index];
+              final mentorId = mentor.id ?? 0;
+
+              final status = mentor.mentor_status; // "Accept", "Reject", null
+
+              return Container(
+                margin: EdgeInsets.only(bottom: 20.h),
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: cardBg,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.grey.withOpacity(0.15)
+                        : Colors.grey.withOpacity(0.1),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Mentor header
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 28.r,
+                          backgroundImage: const NetworkImage(
+                            "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                mentor.name ?? "Mentor Name",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                "Flutter Developer • 1 Yrs",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 13.sp,
+                                  color: secondaryText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => MentorDetailPage(id: mentorId),
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 22.r,
+                            backgroundColor:
+                            isDark ? const Color(0xFFF0F0F7) : const Color(0xFF26252E),
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 16.sp,
+                              color: isDark ? const Color(0xFF1F1F26) : Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 16.h),
+                    Divider(color: Colors.grey.withOpacity(0.3)),
+
+                    SizedBox(height: 12.h),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Proposed Fee", style: _labelStyle(secondaryText)),
+                        Text("Rating", style: _labelStyle(secondaryText)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "₹${proposal.budget ?? '—'}",
+                          style: _valueStyle(textColor),
+                        ),
+                        Text(
+                          "⭐ 4.6 (88 reviews)",
+                          style: _valueStyle(textColor),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 20.h),
+
+                    // ────────────────────────────────────────────────
+                    //     Main Action Area – depends on mentor_status
+                    // ────────────────────────────────────────────────
+                    if (status == null) ...[
+
+                      _buildPendingButtons(context, mentor, proposal.id!),
+
+                    ] else ...[
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          child: Text(
+                            status == "Accept" ? "Accepted" : "Rejected",
+                            style: GoogleFonts.roboto(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w700,
+                              color: status == "Accept" ? Colors.green : Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      if (status == "Accept") ...[
+                        SizedBox(height: 8.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildActionButton(
+                              label: mentor.phone_number ?? "—",
+                              onPressed: () => _callNumber(mentor.phone_number),
+                              color: const Color(0xff9088F1),
+                              textColor: Colors.white,
+                            ),
+                            SizedBox(width: 20.w,),
+                            _buildActionButton(
+                              textColor: Colors.white,
+                              label: "Message",
+                              onPressed: () {
+                                final myProfile = ref.read(userProfileController).value;
+                                if (myProfile?.data == null) return;
+
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (_) => ChatingPage(
+                                      name: mentor.name ?? "N/A",
+                                      id: myProfile!.data!.id.toString(),
+                                      otherUesrid: mentor.id.toString(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              color: const Color(0xff9088F1),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPendingButtons(BuildContext context, Mentor mentor, int proposalId) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildActionButton(
+          label: "Accept Request",
+          isLoading: isAccepting,
+          color: const Color(0xff9088F1),
+          textColor: Colors.white,
+          onPressed: () => _handleAccept(mentor, proposalId),
+        ),
+        SizedBox(width: 20.w,),
+        _buildActionButton(
+          label: "Reject Request",
+          isLoading: isRejecting,
+          color: Colors.white,
+          borderColor: Colors.red,
+          textColor: Colors.red,
+          onPressed: () => _handleReject(mentor, proposalId),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required String label,
+    bool isLoading = false,
+    required Color color,
+    Color? borderColor,
+    required Color textColor,
+    VoidCallback? onPressed,
+  }) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: isLoading ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: textColor,
+          elevation: 1,
+          minimumSize: Size(double.infinity, 46.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            side: borderColor != null ? BorderSide(color: borderColor) : BorderSide.none,
+          ),
+        ),
+        child: isLoading
+            ? SizedBox(
+          width: 24.w,
+          height: 24.h,
+          child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+        )
+            : Text(
+          label,
+          style: GoogleFonts.roboto(fontSize: 13.sp, fontWeight: FontWeight.w700),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleAccept(Mentor mentor, int proposalId) async {
+    setState(() => isAccepting = true);
+    try {
+      final body = MentorrequestApplyBody(
+        mentorId: mentor.id,
+        title: "Accept Request",
+        body: "Accept Request Notification",
+        student_lists_id: proposalId,
+        mentorStatus: "Accept",
+      );
+
+      final service = APIStateNetwork(createDio());
+      final res = await service.mentorSend(body);
+
+      if (res.response.data['success'] == true) {
+        Fluttertoast.showToast(msg: "Accepted!", backgroundColor: Colors.green);
+        ref.invalidate(myListController);
+        ref.invalidate(myListingController);
+      } else {
+        Fluttertoast.showToast(msg: res.response.data['message'] ?? "Failed");
+      }
+    } catch (e) {
+      log("Accept failed: $e");
+      Fluttertoast.showToast(msg: "Something went wrong");
+    } finally {
+      setState(() => isAccepting = false);
+    }
+  }
+
+  Future<void> _handleReject(Mentor mentor, int proposalId) async {
+    setState(() => isRejecting = true);
+    try {
+      final body = MentorrequestApplyBody(
+        mentorId: mentor.id,
+        title: "Reject Request",
+        body: "Reject Request Notification",
+        student_lists_id: proposalId,
+        mentorStatus: "Reject",
+      );
+
+      final service = APIStateNetwork(createDio());
+      final res = await service.mentorSend(body);
+
+      if (res.response.data['success'] == true) {
+        Fluttertoast.showToast(msg: "Rejected", backgroundColor: Colors.orange);
+        ref.invalidate(myListController);
+      } else {
+        Fluttertoast.showToast(msg: res.response.data['message'] ?? "Failed");
+      }
+    } catch (e) {
+      log("Reject failed: $e");
+      Fluttertoast.showToast(msg: "Something went wrong");
+    } finally {
+      setState(() => isRejecting = false);
+    }
+  }
+
+  Future<void> _callNumber(String? phone) async {
+    if (phone == null || phone.isEmpty) return;
+    final uri = Uri(scheme: 'tel', path: phone);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Could not open dialer")),
+      );
+    }
+  }
+
+  TextStyle _labelStyle(Color color) => GoogleFonts.roboto(
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w500,
+    color: color,
+  );
+
+  TextStyle _valueStyle(Color color) => GoogleFonts.roboto(
+    fontSize: 15.sp,
+    fontWeight: FontWeight.w700,
+    color: color,
+  );
+}*/
+
+
+
+import 'dart:developer';
+import 'package:educationapp/coreFolder/Controller/themeController.dart';
+import 'package:educationapp/coreFolder/Model/MyListModel.dart';
+import 'package:educationapp/home/MentorDetail.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../coreFolder/Controller/myListController.dart';
+import '../coreFolder/Controller/myListingController.dart';
+import '../coreFolder/Controller/userProfileController.dart';
+import '../coreFolder/Model/MentorSendBody.dart';
+import '../coreFolder/network/api.state.dart';
+import '../coreFolder/utils/preety.dio.dart';
+import '../home/chating.page.dart';
+
+class MentorProposalPageNew extends ConsumerStatefulWidget {
+  final int proposalId;
+
+  const MentorProposalPageNew({
+    super.key,
+    required this.proposalId,
+  });
+
+  @override
+  ConsumerState<MentorProposalPageNew> createState() => _MentorProposalPageNewState();
+}
+
+class _MentorProposalPageNewState extends ConsumerState<MentorProposalPageNew> {
+  // Instead of global isAccepting/isRejecting → we track per mentor
+  int? _processingMentorId;
+  String? _processingType; // "accept" or "reject"
+
+  bool isProcessingMentor(int mentorId) => _processingMentorId == mentorId;
+
+  @override
+  Widget build(BuildContext context) {
+    final myListAsync = ref.watch(myListController);
+    final themeMode = ref.watch(themeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+
+    final bgColor = isDark ? const Color(0xFF1B1B1B) : Colors.white;
+    final cardBg = isDark ? Colors.white : const Color(0xFF2A2A2A);
+    final textColor = isDark ? const Color(0xFF1B1B1B) : Colors.white;
+    final secondaryText = isDark ? Colors.grey[600]! : Colors.grey[400]!;
+
+    return Scaffold(
+      backgroundColor: themeMode == ThemeMode.dark ? Colors.white : const Color(0xFF1B1B1B),
+      appBar: AppBar(
+        backgroundColor: const Color(0xff9088F1),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          "Mentor Proposals",
+          style: GoogleFonts.roboto(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      body: myListAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text("Error: $err")),
+        data: (GetMyListModel model) {
+          final proposal = model.data?.firstWhere(
+                (p) => p.id == widget.proposalId,
+            orElse: () => DatumMyList(),
+          );
+
+          if (proposal == null || proposal.id == null) {
+            return Center(
+              child: Text(
+                "Proposal not found",
+                style: GoogleFonts.roboto(fontSize: 16.sp, color: Colors.grey),
+              ),
+            );
+          }
+
+          final mentors = proposal.mentors ?? [];
+
+          if (mentors.isEmpty) {
+            return Center(
+              child: Text(
+                "No mentor proposals yet...",
+                style: GoogleFonts.roboto(fontSize: 16.sp, color: Colors.grey),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            itemCount: mentors.length,
+            itemBuilder: (context, index) {
+              final mentor = mentors[index];
+              final mentorId = mentor.id ?? 0;
+              final status = mentor.mentor_status;
+
+              final isThisProcessing = isProcessingMentor(mentorId);
+
+              return Container(
+                margin: EdgeInsets.only(bottom: 20.h),
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: cardBg,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.grey.withOpacity(0.15)
+                        : Colors.grey.withOpacity(0.1),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Mentor header
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 28.r,
+                          backgroundImage: const NetworkImage(
+                            "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                mentor.name ?? "Mentor Name",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: textColor,
+                                ),
+                              ),
+                              Text(
+                                "Flutter Developer • 1 Yrs",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 13.sp,
+                                  color: secondaryText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => MentorDetailPage(id: mentorId),
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 22.r,
+                            backgroundColor:
+                            isDark ? const Color(0xFFF0F0F7) : const Color(0xFF26252E),
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 16.sp,
+                              color: isDark ? const Color(0xFF1F1F26) : Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 16.h),
+                    Divider(color: Colors.grey.withOpacity(0.3)),
+                    SizedBox(height: 12.h),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Proposed Fee", style: _labelStyle(secondaryText)),
+                        Text("Rating", style: _labelStyle(secondaryText)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "₹${proposal.budget ?? '—'}",
+                          style: _valueStyle(textColor),
+                        ),
+                        Text(
+                          "⭐ 4.6 (88 reviews)",
+                          style: _valueStyle(textColor),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 20.h),
+
+                    if (status == null) ...[
+                      _buildPendingButtons(context, mentor, proposal.id!, isThisProcessing),
+                    ] else ...[
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          child: Text(
+                            status == "Accept" ? "Accepted" : "Rejected",
+                            style: GoogleFonts.roboto(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w700,
+                              color: status == "Accept" ? Colors.green : Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (status == "Accept") ...[
+                        SizedBox(height: 8.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildActionButton(
+                              label: mentor.phone_number ?? "—",
+                              onPressed: () => _callNumber(mentor.phone_number),
+                              color: const Color(0xff9088F1),
+                              textColor: Colors.white,
+                            ),
+                            SizedBox(width: 20.w),
+                            _buildActionButton(
+                              label: "Message",
+                              onPressed: () {
+                                final myProfile = ref.read(userProfileController).value;
+                                if (myProfile?.data == null) return;
+
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (_) => ChatingPage(
+                                      name: mentor.name ?? "N/A",
+                                      id: myProfile!.data!.id.toString(),
+                                      otherUesrid: mentor.id.toString(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              color: const Color(0xff9088F1),
+                              textColor: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPendingButtons(
+      BuildContext context,
+      Mentor mentor,
+      int proposalId,
+      bool isThisProcessing,
+      ) {
+    final bool isAcceptLoading = isThisProcessing && _processingType == "accept";
+    final bool isRejectLoading = isThisProcessing && _processingType == "reject";
+
+    // Optional: disable both buttons while any action is processing on this mentor
+    final bool disableButtons = isThisProcessing;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildActionButton(
+          label: "Accept Request",
+          isLoading: isAcceptLoading,
+          color: const Color(0xff9088F1),
+          textColor: Colors.white,
+          onPressed: disableButtons ? null : () => _handleAccept(mentor, proposalId),
+        ),
+        SizedBox(width: 20.w),
+        _buildActionButton(
+          label: "Reject Request",
+          isLoading: isRejectLoading,
+          color: Colors.white,
+          borderColor: Colors.red,
+          textColor: Colors.red,
+          onPressed: disableButtons ? null : () => _handleReject(mentor, proposalId),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required String label,
+    bool isLoading = false,
+    required Color color,
+    Color? borderColor,
+    required Color textColor,
+    VoidCallback? onPressed,
+  }) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: isLoading ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: textColor,
+          elevation: 1,
+          minimumSize: Size(double.infinity, 46.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            side: borderColor != null ? BorderSide(color: borderColor) : BorderSide.none,
+          ),
+        ),
+        child: isLoading
+            ? SizedBox(
+          width: 24.w,
+          height: 24.h,
+          child: const CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2.5,
+          ),
+        )
+            : Text(
+          label,
+          style: GoogleFonts.roboto(fontSize: 13.sp, fontWeight: FontWeight.w700),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleAccept(Mentor mentor, int proposalId) async {
+    setState(() {
+      _processingMentorId = mentor.id;
+      _processingType = "accept";
+    });
+
+    try {
+      final body = MentorrequestApplyBody(
+        mentorId: mentor.id,
+        title: "Accept Request",
+        body: "Accept Request Notification",
+        student_lists_id: proposalId,
+        mentorStatus: "Accept",
+      );
+
+      final service = APIStateNetwork(createDio());
+      final res = await service.mentorSend(body);
+
+      if (res.response.data['success'] == true) {
+        Fluttertoast.showToast(msg: "Accepted!", backgroundColor: Colors.green);
+        ref.invalidate(myListController);
+        ref.invalidate(myListingController);
+      } else {
+        Fluttertoast.showToast(msg: res.response.data['message'] ?? "Failed");
+      }
+    } catch (e) {
+      log("Accept failed: $e");
+      Fluttertoast.showToast(msg: "Something went wrong");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _processingMentorId = null;
+          _processingType = null;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleReject(Mentor mentor, int proposalId) async {
+    setState(() {
+      _processingMentorId = mentor.id;
+      _processingType = "reject";
+    });
+
+    try {
+      final body = MentorrequestApplyBody(
+        mentorId: mentor.id,
+        title: "Reject Request",
+        body: "Reject Request Notification",
+        student_lists_id: proposalId,
+        mentorStatus: "Reject",
+      );
+
+      final service = APIStateNetwork(createDio());
+      final res = await service.mentorSend(body);
+
+      if (res.response.data['success'] == true) {
+        Fluttertoast.showToast(msg: "Rejected", backgroundColor: Colors.orange);
+        ref.invalidate(myListController);
+      } else {
+        Fluttertoast.showToast(msg: res.response.data['message'] ?? "Failed");
+      }
+    } catch (e) {
+      log("Reject failed: $e");
+      Fluttertoast.showToast(msg: "Something went wrong");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _processingMentorId = null;
+          _processingType = null;
+        });
+      }
+    }
+  }
+
+  Future<void> _callNumber(String? phone) async {
+    if (phone == null || phone.isEmpty) return;
+    final uri = Uri(scheme: 'tel', path: phone);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Could not open dialer")),
+      );
+    }
+  }
+
+  TextStyle _labelStyle(Color color) => GoogleFonts.roboto(
+    fontSize: 13.sp,
+    fontWeight: FontWeight.w500,
+    color: color,
+  );
+
+  TextStyle _valueStyle(Color color) => GoogleFonts.roboto(
+    fontSize: 15.sp,
+    fontWeight: FontWeight.w700,
+    color: color,
+  );
 }

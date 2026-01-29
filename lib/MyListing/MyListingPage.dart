@@ -1015,13 +1015,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:developer';
 import 'package:hive/hive.dart';
 import '../coreFolder/Controller/myListController.dart';
-import '../home/mentorProposal.page.dart';
 import 'ListingMyDetail.dart';
 import 'mentorProposol.dart';
 
 class MyListing extends ConsumerStatefulWidget {
   const MyListing({super.key});
-
   @override
   ConsumerState<MyListing> createState() => _MyListingState();
 }
@@ -1071,8 +1069,10 @@ class _MyListingState extends ConsumerState<MyListing> {
           style: TextStyle(color: Colors.white, fontSize: 20.sp),
         ),
       ),
+
       backgroundColor:
       themeMode == ThemeMode.dark ? Colors.white : const Color(0xFF1B1B1B),
+
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         color: const Color(0xff9088F1),
@@ -1313,16 +1313,18 @@ class _MyListingState extends ConsumerState<MyListing> {
                                     ),
                                   ),
                                   onPressed: () {
+
                                     Navigator.push(
                                       context,
                                       CupertinoPageRoute(
                                         builder: (_) =>
-                                            ListingDetailsPage(false, item),
+                                            ListingDetailsPage(requirementId: item.id!),
                                       ),
                                     ).then((_) {
                                       ref.invalidate(myListingController);
                                     });
-                                  },
+
+                                    },
                                   child: Text(
                                     "View Details",
                                     style: GoogleFonts.roboto(
@@ -1719,21 +1721,23 @@ class _MyListingState extends ConsumerState<MyListing> {
                                         ),
                                         SizedBox(width: 10.w),
                                         Container(
-                                          width: 20,
-                                          height: 20,
+
                                           decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: Colors.black),
                                             shape: BoxShape.circle,
                                           ),
                                           alignment: Alignment.center,
-                                          child: Text(
-                                            item.mentorCount.toString(),
-                                            style: GoogleFonts.roboto(
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.w600,
-                                              letterSpacing: 0.5,
-                                              color: Colors.black,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(6.0),
+                                            child: Text(
+                                              item.mentorCount.toString(),
+                                              style: GoogleFonts.roboto(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w600,
+                                                letterSpacing: 0.5,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -1746,7 +1750,7 @@ class _MyListingState extends ConsumerState<MyListing> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                MentorProposalPageNew(item: item),
+                                                MentorProposalPageNew(proposalId: item.id!),
                                           ),
                                         ).then((_) =>
                                             ref.invalidate(myListController));
