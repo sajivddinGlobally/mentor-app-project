@@ -797,6 +797,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import '../MyListing/CreateListPage.dart';
 import '../dropDown/dropDownController.dart';
 import '../coreFolder/Controller/searchController.dart';
 import '../coreFolder/Model/searchMentorModel.dart';
@@ -1052,68 +1053,150 @@ class _FindMentorPageState extends ConsumerState<FindMentorPage> {
 
           // Mentors list area
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: themeMode == ThemeMode.dark
-                    ? Colors.white
-                    : const Color(0xFF1B1B1B),
-                borderRadius: BorderRadius.circular(30.r),
+            child: Stack(
+              children:[
+                Container(
+                decoration: BoxDecoration(
+                  color: themeMode == ThemeMode.dark
+                      ? Colors.white
+                      :  Color(0xFF1B1B1B),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30.sp),topRight: Radius.circular(30.sp))
+                ),
+                child: mentorProvider.when(
+                  data: (mentors) {
+                    if (mentors.data?.isEmpty ?? true) {
+                      return const Center(child: Text("No mentors found"));
+                    }
+                    return ListView.builder(
+                      padding: EdgeInsets.only(top: 10.h),
+                      itemCount: mentors.data!.length,
+                      itemBuilder: (context, index) {
+                        final mentor = mentors.data![index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (_) =>
+                                      MentorDetailPage(id: mentor.id ?? 0),
+                                ),
+                              );
+                            },
+                            child: UserTabs(
+                              image: mentor.profilePic ??
+                                  "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
+                              id: mentor.id!,
+                              fullname: mentor.fullName ?? 'Unknown',
+                              dec: mentor.description ?? 'No description',
+                              servicetype: mentor.serviceType?.split(', ') ?? [],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  error: (err, st) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Failed to load mentors: $err",
+                          style:
+                              GoogleFonts.roboto(color: const Color(0xFF1B1B1B)),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => ref.refresh(searchMentorProvider),
+                          child: const Text("Retry"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  loading: () => const DataLoading(),
+                ),
               ),
-              child: mentorProvider.when(
-                data: (mentors) {
-                  if (mentors.data?.isEmpty ?? true) {
-                    return const Center(child: Text("No mentors found"));
-                  }
-                  return ListView.builder(
-                    padding: EdgeInsets.only(top: 10.h),
-                    itemCount: mentors.data!.length,
-                    itemBuilder: (context, index) {
-                      final mentor = mentors.data![index];
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
+
+                // 2. Bottom floating card (stays fixed)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xffFFF4D7),
+                      // borderRadius: BorderRadius.circular(20.sp),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          blurRadius: 10,
+                          offset: const Offset(0, -4),
+                        ),
+                      ],
+                    ),
+                    // margin: EdgeInsets.all(20.sp),
+                    padding: EdgeInsets.all(20.sp),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Don’t find the right mentor ?",
+                                style: GoogleFonts.roboto(
+                                  color: Color(0xff1C4D8D),
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 10.h),
+                              Text(
+                                "Upload your custom request and let the mentors bid on it",
+                                style: GoogleFonts.roboto(
+                                  color: Color(0xff2E2E2E),
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
-                              CupertinoPageRoute(
-                                builder: (_) =>
-                                    MentorDetailPage(id: mentor.id ?? 0),
-                              ),
+                              MaterialPageRoute(builder: (context) => CreateListPage()),
                             );
                           },
-                          child: UserTabs(
-                            image: mentor.profilePic ??
-                                "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
-                            id: mentor.id!,
-                            fullname: mentor.fullName ?? 'Unknown',
-                            dec: mentor.description ?? 'No description',
-                            servicetype: mentor.serviceType?.split(', ') ?? [],
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.sp),
+                              color: const Color(0xff0F2854),
+                            ),
+                            padding: EdgeInsets.all(10.sp),
+                            child: Text(
+                              "Upload Request",
+                              style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                           ),
                         ),
-                      );
-                    },
-                  );
-                },
-                error: (err, st) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Failed to load mentors: $err",
-                        style:
-                            GoogleFonts.roboto(color: const Color(0xFF1B1B1B)),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () => ref.refresh(searchMentorProvider),
-                        child: const Text("Retry"),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-                loading: () => const DataLoading(),
-              ),
-            ),
+
+            ]),
           ),
         ],
       ),

@@ -2582,6 +2582,79 @@ class _HomePageBodyState extends ConsumerState<HomePageBody> {
       children: [
         // SizedBox(height: 10.h),
 
+
+        Container(
+          decoration: BoxDecoration(
+              color: Color(0xff1C4D8D),
+            borderRadius: BorderRadius.circular(20.sp)
+          ),
+padding: EdgeInsets.all(20.sp),
+          margin: EdgeInsets.all(20.sp),
+
+
+
+
+
+          child: Row(children: [
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                Text(
+                  "Don’t find the right mentor ?",
+                  style: GoogleFonts.roboto(
+                    color:Colors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 10.h,),
+              
+                Text(
+                  "Upload your custom request and let the mentors bid on it",
+                  style: GoogleFonts.roboto(
+                    color:Colors.grey,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              
+              ],),
+            ),
+SizedBox(width: 10.w,),
+
+            GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateListPage()));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.sp),
+                  color: Color(0xffD9A218),
+                ),
+              padding: EdgeInsets.all(10.sp),
+
+                child: Text(
+                  "Upload Request",
+                  style: GoogleFonts.roboto(
+                    color:Colors.white,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            )
+
+          ],),
+        ),
+
         Container(
           margin: EdgeInsets.symmetric(horizontal: 20.w),
           child: Row(
