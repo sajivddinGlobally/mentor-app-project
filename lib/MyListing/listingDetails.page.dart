@@ -874,6 +874,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -989,13 +990,40 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
-    final cardColor = isDark ? const Color(0xFF2A2A2A) : Colors.white;
-    final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    final cardColor =
+    // isDark ? const Color(0xFF2A2A2A) : Colors.white;
+    // isDark ? const Color(0xFF2A2A2A) :
+    Colors.white;
+    // final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    final textColor =  const Color(0xFF1B1B1B);
     final secondaryTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
-    final bgColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    // final bgColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    final bgColor =
+    const Color(0xFF1B1B1B);
+    ///////////////////////////////
+    final profile =
+    ref.read(userProfileController);
 
+    final box = Hive.box('userdata');
+    int id =  box.get('userid');
+
+
+
+
+
+    /////////////////////////
+
+// Sabse pehle current user ki ID nikal lo (Riverpod / Provider / Hive se jo bhi use kar rahe ho)
+    final currentUserId = profile.value?.data?.id;   // ← yeh change karna padega apne hisaab se
+// ya Hive se:
+// final currentUserId = box.get('userid');
+
+    bool isMyListing = false;
+    if (currentUserId != null && widget.item.mentors != null && widget.item.mentors!.isNotEmpty) {
+      isMyListing = widget.item.mentors!.any((mentor) => mentor.id == currentUserId);
+    }
     return Scaffold(
-      //  backgroundColor: bgColor,
+       backgroundColor:  isDark ? Colors.white : const Color(0xFF1B1B1B),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: InkWell(
@@ -1007,7 +1035,7 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
             width: 3.w, // ← yeh chhota kiya
             height: 3.h, // ← yeh chhota kiya
             decoration: BoxDecoration(
-              color: isDark ? bgColor : Colors.white,
+              color: isDark ?   Colors.white:bgColor,
               shape: BoxShape.circle,
               border:
                   Border.all(color: Colors.white.withOpacity(0.2), width: 1),
@@ -1018,7 +1046,9 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
                 child: Icon(
                   Icons.arrow_back_ios,
                   size: 20,
-                  color: isDark ? Colors.black : const Color(0xff9088F1),
+                  // color: isDark ? Colors.black : const Color(0xff9088F1),
+                  color:
+                  const Color(0xff9088F1),
                 ),
               ),
             ),
@@ -1085,7 +1115,7 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50.r),
                       child: Image.network(
-                        widget.item.student?.profilePic ??
+                        widget.item.student!.profilePic ??
                             "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
                         height: 80.h,
                         width: 80.w,
@@ -1114,7 +1144,7 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.item.student?.fullName ?? "Student",
+                          widget.item.student!.fullName ?? "Student",
                           style: GoogleFonts.roboto(
                               fontSize: 22.sp,
                               fontWeight: FontWeight.w700,
@@ -1265,12 +1295,14 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
                         label: "Level",
                         value: widget.item.education ?? "N/A",
                       ),
+
                       _buildInfoRow(
                         icon: Icons.schedule,
                         color: Colors.green,
                         label: "Requires",
                         value: widget.item.requires ?? "N/A",
                       ),
+
                       _buildInfoRow(
                         icon: Icons.person_2_outlined,
                         color: Colors.deepPurple,
@@ -1361,122 +1393,134 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
             // hasApplied
 
             !widget.data
-                ? status == 1
-                    ? Column(
-                        children: [
-                          _buildActionButton(
-                            icon: Icons.email_outlined,
-                            label: "Message",
-                            onTap: status == 0
-                                ? null
-                                : () {
-                                    log("id : -  ${widget.item.id.toString()}");
-                                    log("Student id : -  ${widget.item.studentId.toString()}");
-                                    Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (context) => ChatingPage(
-                                              name: widget
-                                                      .item.student!.fullName ??
-                                                  "N/A",
-                                              id: widget.item.id.toString(),
-                                              otherUesrid: widget.item.studentId
-                                                  .toString()),
-                                        ));
-                                  },
-                          ),
-                          SizedBox(height: 12.h),
-                          _buildActionButton(
-                            icon: Icons.phone_outlined,
-                            label:
-                                "Phone number ${widget.item.student!.phoneNumber ?? ""}",
-                            onTap: () {
-                              String? phone = widget.item.student!.phoneNumber;
+                ?
 
-                              if (phone == null || phone.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text("Phone number not available")),
+            // widget.item.mentors!.isEmpty ||  widget.item.mentors!.any((mentor) => mentor.id != id)
+
+            isMyListing
+                    ?
+
+
+
+
+            Column(
+              children: [
+                _buildActionButton(
+                  icon: Icons.email_outlined,
+                  label: "Message",
+                  onTap: status == 0
+                      ? null
+                      : () {
+                    log("id : -  ${widget.item.id.toString()}");
+                    log("Student id : -  ${widget.item.studentId.toString()}");
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => ChatingPage(
+                              name: widget
+                                  .item.student!.fullName ??
+                                  "N/A",
+                              id: widget.item.id.toString(),
+                              otherUesrid: widget.item.studentId
+                                  .toString()),
+                        ));
+                  },
+                ),
+                SizedBox(height: 12.h),
+                _buildActionButton(
+                  icon: Icons.phone_outlined,
+                  label:
+                  "Phone number ${widget.item.student!.phoneNumber ?? ""}",
+                  onTap: () {
+                    String? phone = widget.item.student!.phoneNumber;
+
+                    if (phone == null || phone.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content:
+                            Text("Phone number not available")),
+                      );
+                      return;
+                    }
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) {
+                        return AlertDialog(
+                          title: Text("Call Student"),
+                          content:
+                          Text("Do you want to call ${phone}?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(dialogContext)
+                                    .pop(); // Dialog close
+                              },
+                              child: Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                Navigator.of(dialogContext)
+                                    .pop(); // Dialog close
+
+                                // Actual phone call
+                                final Uri launchUri = Uri(
+                                  scheme: 'tel',
+                                  path: phone,
                                 );
-                                return;
-                              }
-
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext dialogContext) {
-                                  return AlertDialog(
-                                    title: Text("Call Student"),
-                                    content:
-                                        Text("Do you want to call ${phone}?"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(dialogContext)
-                                              .pop(); // Dialog close
-                                        },
-                                        child: Text("Cancel"),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          Navigator.of(dialogContext)
-                                              .pop(); // Dialog close
-
-                                          // Actual phone call
-                                          final Uri launchUri = Uri(
-                                            scheme: 'tel',
-                                            path: phone,
-                                          );
-                                          if (await canLaunchUrl(launchUri)) {
-                                            await launchUrl(launchUri);
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                  content: Text(
-                                                      "Could not launch dialer")),
-                                            );
-                                          }
-
-                                          // Agar call karne ke baad koi new screen navigate karna hai toh yeh karo
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //     builder: (context) => YourNewScreen(student: widget.item.student!),
-                                          //   ),
-                                          // );
-                                        },
-                                        child: Text(
-                                          "Call",
-                                          style: TextStyle(color: Colors.teal),
-                                        ),
-                                      ),
-                                    ],
+                                if (await canLaunchUrl(launchUri)) {
+                                  await launchUrl(launchUri);
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            "Could not launch dialer")),
                                   );
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildActionButton(
-                            icon: Icons.email_outlined,
-                            label:
-                                "Message & view phone number (${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()} coins)",
-                            onTap: () {}, // Placeholder, as per original
-                          ),
-                          SizedBox(height: 12.h),
-                          _buildActionButton(
-                            icon: Icons.phone_outlined,
-                            label:
-                                "view phone number (${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()} coins)",
-                            onTap: () {}, // Placeholder, as per original
-                          ),
-                        ],
-                      )
+                                }
+
+                                // Agar call karne ke baad koi new screen navigate karna hai toh yeh karo
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => YourNewScreen(student: widget.item.student!),
+                                //   ),
+                                // );
+                              },
+                              child: Text(
+                                "Call",
+                                style: TextStyle(color: Colors.teal),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ):
+
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildActionButton(
+                  icon: Icons.email_outlined,
+                  label:
+                  "Message & view phone number (${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()} coins)",
+                  onTap: () {}, // Placeholder, as per original
+                ),
+                SizedBox(height: 12.h),
+                _buildActionButton(
+                  icon: Icons.phone_outlined,
+                  label:
+                  "view phone number (${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()} coins)",
+                  onTap: () {}, // Placeholder, as per original
+                ),
+              ],
+            )
+
                 : SizedBox(),
 
             SizedBox(height: 24.h),
@@ -1486,135 +1530,146 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
             ///
 
             !widget.data
-                ? Row(
+                ?
+
+            Row(
                     children: [
-                      status == 1
-                          ? SizedBox()
-                          : Expanded(
-                              child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xff9088F1),
-                                  foregroundColor: Colors.white,
-                                  elevation: 4,
-                                  shadowColor:
-                                      const Color(0xff9088F1).withOpacity(0.3),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
-                                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                                ),
-                                onPressed: () async {
-                                  final profile =
-                                      ref.read(userProfileController);
+                      // widget.item.notificationStatus=="success"
+                      // status == 1
+                      isMyListing
+                        ?
+                     SizedBox():
+                      Expanded(
+                        child:
 
-                                  // Safety check
-                                  if (profile.value == null ||
-                                      profile.value!.data == null) {
-                                    Fluttertoast.showToast(
-                                        msg: "Profile not loaded");
-                                    return;
-                                  }
+                        ElevatedButton.icon(
 
-                                  // User ke paas kitne coins hain (String se double mein convert)
-                                  final String? userCoinsStr =
-                                      profile.value!.data!.coins;
-                                  final double userCoins =
-                                      double.tryParse(userCoinsStr ?? "0") ??
-                                          0.0;
-
-                                  // Mentor apply ke liye kitni fee hai (rupees mein)
-                                  final double feeInRupees = double.tryParse(
-                                          widget.item.budget ?? "0") ??
-                                      0.0;
-
-                                  // Kitne coins chahiye is fee ke liye? (₹0.1 = 1 coin → ₹1 = 10 coins)
-                                  // final int requiredCoins = (feeInRupees * 10)
-                                  //     .toInt(); // Ya function use karo niche diya hua
-
-                                  // Check karo: User ke paas kaafi coins hain ya nahi?
-                                  if (userCoins < feeInRupees) {
-                                    Fluttertoast.showToast(
-                                      msg:
-                                          "Insufficient coins! You need $feeInRupees coins (₹$feeInRupees)",
-                                      toastLength: Toast.LENGTH_LONG,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                    );
-                                    return;
-                                  }
-
-                                  // Agar coins kaafi hain toh apply karo
-                                  final body = ApplybodyModel(
-                                    body:
-                                        "A mentor has applied to your request. Check details now!",
-                                    title: "Mentor Application",
-                                    userId: widget.item.studentId,
-                                    studentIistsId: widget.item.id,
-                                  );
-
-                                  try {
-                                    setState(() {
-                                      isAccept = true;
-                                    });
-
-                                    final service =
-                                        APIStateNetwork(createDio());
-                                    final response = await service
-                                        .applyOrSendNotification(body);
-
-                                    if (response.response.data['success'] ==
-                                        true) {
-                                      Fluttertoast.showToast(
-                                        msg: "Applied successfully!",
-                                        backgroundColor: Colors.green,
-                                      );
-                                      setState(() {
-                                        status =
-                                            1; // 🔥 UI instantly refresh ho jayega
-                                      });
-
-                                      ref.invalidate(myListingController);
-                                    } else {
-                                      Fluttertoast.showToast(
-                                        msg:
-                                            response.response.data['message'] ??
-                                                "Application failed",
-                                      );
-                                    }
-                                  } catch (e, st) {
-                                    log("Apply Error: $e\nStackTrace: $st");
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "Something went wrong. Try again.");
-                                  } finally {
-                                    setState(() {
-                                      isAccept = false;
-                                    });
-                                  }
-                                },
-                                icon: isAccept
-                                    ? SizedBox(
-                                        width: 20.w,
-                                        height: 20.h,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : Icon(Icons.apple_outlined, size: 20),
-                                label: isAccept
-                                    ? const Text("")
-                                    : Text(
-                                        "Apply Now",
-                                        style: GoogleFonts.inter(
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white),
-                                      ),
-                              ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff9088F1),
+                            foregroundColor: Colors.white,
+                            elevation: 4,
+                            shadowColor:
+                            const Color(0xff9088F1).withOpacity(0.3),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.r),
                             ),
+                            padding: EdgeInsets.symmetric(vertical: 16.h),
+                          ),
+
+                          onPressed: () async {
+                            final profile =
+                            ref.read(userProfileController);
+
+                            // Safety check
+                            if (profile.value == null ||
+                                profile.value!.data == null) {
+                              Fluttertoast.showToast(
+                                  msg: "Profile not loaded");
+                              return;
+                            }
+
+                            // User ke paas kitne coins hain (String se double mein convert)
+                            final String? userCoinsStr =
+                                profile.value!.data!.coins;
+                            final double userCoins =
+                                double.tryParse(userCoinsStr ?? "0") ??
+                                    0.0;
+
+                            // Mentor apply ke liye kitni fee hai (rupees mein)
+                            final double feeInRupees = double.tryParse(
+                                widget.item.budget ?? "0") ??
+                                0.0;
+
+                            // Kitne coins chahiye is fee ke liye? (₹0.1 = 1 coin → ₹1 = 10 coins)
+                            // final int requiredCoins = (feeInRupees * 10)
+                            //     .toInt(); // Ya function use karo niche diya hua
+
+                            // Check karo: User ke paas kaafi coins hain ya nahi?
+                            if (userCoins < feeInRupees) {
+                              Fluttertoast.showToast(
+                                msg:
+                                "Insufficient coins! You need $feeInRupees coins (₹$feeInRupees)",
+                                toastLength: Toast.LENGTH_LONG,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                              );
+                              return;
+                            }
+
+                            // Agar coins kaafi hain toh apply karo
+                            final body = ApplybodyModel(
+                              body:
+                              "A mentor has applied to your request. Check details now!",
+                              title: "Mentor Application",
+                              userId: widget.item.studentId,
+                              studentIistsId: widget.item.id,
+                            );
+
+                            try {
+                              setState(() {
+                                isAccept = true;
+                              });
+
+                              final service =
+                              APIStateNetwork(createDio());
+                              final response = await service
+                                  .applyOrSendNotification(body);
+
+                              if (response.response.data['success'] ==
+                                  true) {
+                                Fluttertoast.showToast(
+                                  msg: "Applied successfully!",
+                                  backgroundColor: Colors.green,
+                                );
+                                setState(() {
+                                  status =
+                                  1; // 🔥 UI instantly refresh ho jayega
+                                });
+
+                                ref.invalidate(myListingController);
+                              } else {
+                                Fluttertoast.showToast(
+                                  msg:
+                                  response.response.data['message'] ??
+                                      "Application failed",
+                                );
+                              }
+                            } catch (e, st) {
+                              log("Apply Error: $e\nStackTrace: $st");
+                              Fluttertoast.showToast(
+                                  msg:
+                                  "Something went wrong. Try again.");
+                            } finally {
+                              setState(() {
+                                isAccept = false;
+                              });
+                            }
+                          },
+                          icon: isAccept
+                              ?
+                          SizedBox(
+                            width: 20.w,
+                            height: 20.h,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                              : Icon(Icons.apple_outlined, size: 20),
+                          label: isAccept
+                              ? const Text("")
+                              : Text(
+                            "Apply Now",
+                            style: GoogleFonts.inter(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                          ),
+                        ),
+                      )
                     ],
                   )
+
                 : SizedBox()
           ],
         ),
@@ -1662,8 +1717,13 @@ class _ListingDetailsPageState extends ConsumerState<ListingDetailsPage> {
   }) {
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
-    final secondaryTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    // final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
+    final textColor =
+    const Color(0xFF1B1B1B);
+    // final secondaryTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
+    final secondaryTextColor =
+    // isDark ? Colors.grey[400]! :
+    Colors.grey[600]!;
 
     return Container(
       padding: EdgeInsets.all(12.w),
