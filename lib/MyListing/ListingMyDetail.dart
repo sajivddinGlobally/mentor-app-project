@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:educationapp/coreFolder/Controller/myListingController.dart';
 import 'package:educationapp/coreFolder/Controller/themeController.dart';
@@ -24,10 +23,12 @@ class ListingDetailsPageMyDetail extends ConsumerStatefulWidget {
   final DatumMyList item;
   ListingDetailsPageMyDetail(this.data, this.item, {super.key});
   @override
-  ConsumerState<ListingDetailsPageMyDetail> createState() => _ListingDetailsPageMyDetailState();
+  ConsumerState<ListingDetailsPageMyDetail> createState() =>
+      _ListingDetailsPageMyDetailState();
 }
 
-class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageMyDetail> {
+class _ListingDetailsPageMyDetailState
+    extends ConsumerState<ListingDetailsPageMyDetail> {
   // bool hasApplied = false;
   bool isAccept = false;
   late int status;
@@ -129,7 +130,7 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
 
   @override
   Widget build(BuildContext context) {
-   /* final themeMode = ref.watch(themeProvider);
+    /* final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
     final cardColor = isDark ? const Color(0xFF2A2A2A) : Colors.white;
     final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
@@ -139,17 +140,16 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
     final cardColor =
-    // isDark ? const Color(0xFF2A2A2A) : Colors.white;
-    // isDark ? const Color(0xFF2A2A2A) :
-    Colors.white;
+        // isDark ? const Color(0xFF2A2A2A) : Colors.white;
+        // isDark ? const Color(0xFF2A2A2A) :
+        Colors.white;
     // final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
-    final textColor =  const Color(0xFF1B1B1B);
+    final textColor = const Color(0xFF1B1B1B);
     final secondaryTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
     // final bgColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
-    final bgColor =
-    const Color(0xFF1B1B1B);
+    final bgColor = const Color(0xFF1B1B1B);
     return Scaffold(
-      backgroundColor:  isDark ? Colors.white : const Color(0xFF1B1B1B),
+      backgroundColor: isDark ? Colors.white : const Color(0xFF1B1B1B),
       //  backgroundColor: bgColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -157,25 +157,12 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
           onTap: () {
             Navigator.pop(context);
           },
-          child: Container(
-            margin: EdgeInsets.only(left: 10.w, top: 10, bottom: 10),
-            width: 3.w, // ← yeh chhota kiya
-            height: 3.h, // ← yeh chhota kiya
-            decoration: BoxDecoration(
-              color: isDark ? bgColor : Colors.white,
-              shape: BoxShape.circle,
-              border:
-              Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-            ),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 6), // ← thoda kam kiya
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  size: 20,
-                  color: isDark ? Colors.black : const Color(0xff9088F1),
-                ),
-              ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 6), // ← thoda kam kiya
+            child: Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+              color: Colors.white,
             ),
           ),
         ),
@@ -298,7 +285,7 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
                   // Status Badge
                   Container(
                     padding:
-                    EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -369,31 +356,31 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
                     children: widget.item.subjects!
                         .map<Widget>(
                           (s) => Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 8.h),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color(0xff9088F1).withOpacity(0.1),
-                              Colors.transparent,
-                            ],
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.w, vertical: 8.h),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  const Color(0xff9088F1).withOpacity(0.1),
+                                  Colors.transparent,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(20.r),
+                              border: Border.all(
+                                color: const Color(0xff9088F1).withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              s,
+                              style: GoogleFonts.roboto(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: textColor,
+                              ),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(20.r),
-                          border: Border.all(
-                            color: const Color(0xff9088F1).withOpacity(0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          s,
-                          style: GoogleFonts.roboto(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: textColor,
-                          ),
-                        ),
-                      ),
-                    )
+                        )
                         .toList(),
                   ),
                   SizedBox(height: 20.h),
@@ -406,7 +393,7 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
                         color: Colors.red,
                         label: "Location",
                         value:
-                        "${widget.item.localAddress ?? ''} ${widget.item.state} India ${widget.item.pincode}",
+                            "${widget.item.localAddress ?? ''} ${widget.item.state} India ${widget.item.pincode}",
                       ),
                       _buildInfoRow(
                         icon: Icons.date_range_outlined,
@@ -420,20 +407,18 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
                         label: "Level",
                         value: widget.item.education ?? "N/A",
                       ),
-
                       _buildInfoRow(
                         icon: Icons.schedule,
                         color: Colors.green,
                         label: "Requires",
                         value: widget.item.requires ?? "N/A",
                       ),
-
                       _buildInfoRow(
                         icon: Icons.person_2_outlined,
                         color: Colors.deepPurple,
                         label: "Posted By",
                         value:
-                        "${widget.item.student!.fullName ?? "N/A"} (Student)",
+                            "${widget.item.student!.fullName ?? "N/A"} (Student)",
                       ),
                       _buildInfoRow(
                         icon: Icons.people_outline_outlined,
@@ -446,7 +431,7 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
                         color: Colors.amber,
                         label: "Coins",
                         value:
-                        "${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()}",
+                            "${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()}",
                       ),
                     ],
                   ),
@@ -519,127 +504,121 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
 
             !widget.data
                 ? status == 1
-                ?
+                    ? Column(
+                        children: [
+                          _buildActionButton(
+                            icon: Icons.email_outlined,
+                            label: "Message",
+                            onTap: status == 0
+                                ? null
+                                : () {
+                                    log("id : -  ${widget.item.id.toString()}");
+                                    log("Student id : -  ${widget.item.studentId.toString()}");
+                                    Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) => ChatingPage(
+                                              name: widget
+                                                      .item.student!.fullName ??
+                                                  "N/A",
+                                              id: widget.item.id.toString(),
+                                              otherUesrid: widget.item.studentId
+                                                  .toString()),
+                                        ));
+                                  },
+                          ),
+                          SizedBox(height: 12.h),
+                          _buildActionButton(
+                            icon: Icons.phone_outlined,
+                            label:
+                                "Phone number ${widget.item.student!.phoneNumber ?? ""}",
+                            onTap: () {
+                              String? phone = widget.item.student!.phoneNumber;
 
-            Column(
-              children: [
-                _buildActionButton(
-                  icon: Icons.email_outlined,
-                  label: "Message",
-                  onTap: status == 0
-                      ? null
-                      : () {
-                    log("id : -  ${widget.item.id.toString()}");
-                    log("Student id : -  ${widget.item.studentId.toString()}");
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => ChatingPage(
-                              name: widget
-                                  .item.student!.fullName ??
-                                  "N/A",
-                              id: widget.item.id.toString(),
-                              otherUesrid: widget.item.studentId
-                                  .toString()),
-                        ));
-                  },
-                ),
-                SizedBox(height: 12.h),
-                _buildActionButton(
-                  icon: Icons.phone_outlined,
-                  label:
-                  "Phone number ${widget.item.student!.phoneNumber ?? ""}",
-                  onTap: () {
-                    String? phone = widget.item.student!.phoneNumber;
-
-                    if (phone == null || phone.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                            Text("Phone number not available")),
-                      );
-                      return;
-                    }
-
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext dialogContext) {
-                        return AlertDialog(
-                          title: Text("Call Student"),
-                          content:
-                          Text("Do you want to call ${phone}?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(dialogContext)
-                                    .pop(); // Dialog close
-                              },
-                              child: Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.of(dialogContext)
-                                    .pop(); // Dialog close
-
-                                // Actual phone call
-                                final Uri launchUri = Uri(
-                                  scheme: 'tel',
-                                  path: phone,
+                              if (phone == null || phone.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text("Phone number not available")),
                                 );
-                                if (await canLaunchUrl(launchUri)) {
-                                  await launchUrl(launchUri);
-                                } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            "Could not launch dialer")),
+                                return;
+                              }
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext dialogContext) {
+                                  return AlertDialog(
+                                    title: Text("Call Student"),
+                                    content:
+                                        Text("Do you want to call ${phone}?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(dialogContext)
+                                              .pop(); // Dialog close
+                                        },
+                                        child: Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.of(dialogContext)
+                                              .pop(); // Dialog close
+
+                                          // Actual phone call
+                                          final Uri launchUri = Uri(
+                                            scheme: 'tel',
+                                            path: phone,
+                                          );
+                                          if (await canLaunchUrl(launchUri)) {
+                                            await launchUrl(launchUri);
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      "Could not launch dialer")),
+                                            );
+                                          }
+
+                                          // Agar call karne ke baad koi new screen navigate karna hai toh yeh karo
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => YourNewScreen(student: widget.item.student!),
+                                          //   ),
+                                          // );
+                                        },
+                                        child: Text(
+                                          "Call",
+                                          style: TextStyle(color: Colors.teal),
+                                        ),
+                                      ),
+                                    ],
                                   );
-                                }
-
-                                // Agar call karne ke baad koi new screen navigate karna hai toh yeh karo
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => YourNewScreen(student: widget.item.student!),
-                                //   ),
-                                // );
-                              },
-                              child: Text(
-                                "Call",
-                                style: TextStyle(color: Colors.teal),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            )
-
-                :
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildActionButton(
-                  icon: Icons.email_outlined,
-                  label:
-                  "Message & view phone number (${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()} coins)",
-                  onTap: () {}, // Placeholder, as per original
-                ),
-                SizedBox(height: 12.h),
-                _buildActionButton(
-                  icon: Icons.phone_outlined,
-                  label:
-                  "view phone number (${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()} coins)",
-                  onTap: () {}, // Placeholder, as per original
-                ),
-              ],
-            )
-
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildActionButton(
+                            icon: Icons.email_outlined,
+                            label:
+                                "Message & view phone number (${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()} coins)",
+                            onTap: () {}, // Placeholder, as per original
+                          ),
+                          SizedBox(height: 12.h),
+                          _buildActionButton(
+                            icon: Icons.phone_outlined,
+                            label:
+                                "view phone number (${(double.tryParse(widget.item.budget ?? '0') ?? 0).toInt()} coins)",
+                            onTap: () {}, // Placeholder, as per original
+                          ),
+                        ],
+                      )
                 : SizedBox(),
 
             SizedBox(height: 24.h),
@@ -812,9 +791,9 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
         ),
         SizedBox(height: 12.h),
         ...children.map((child) => Padding(
-          padding: EdgeInsets.only(bottom: 12.h),
-          child: child,
-        )),
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: child,
+            )),
         SizedBox(height: 8.h),
         Container(
           height: 1,
@@ -834,8 +813,7 @@ class _ListingDetailsPageMyDetailState extends ConsumerState<ListingDetailsPageM
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
     // final textColor = isDark ? Colors.white : const Color(0xFF1B1B1B);
-    final textColor =
-  const Color(0xFF1B1B1B);
+    final textColor = const Color(0xFF1B1B1B);
     // final secondaryTextColor = isDark ? Colors.grey[400]! : Colors.grey[600]!;
     final secondaryTextColor = Colors.grey[600]!;
 

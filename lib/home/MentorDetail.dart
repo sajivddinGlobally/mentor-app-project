@@ -754,38 +754,15 @@ class _MentorDetailPageState extends ConsumerState<MentorDetailPage> {
                                                       .toList(),
                                                 )
                                               else
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 12.w,
-                                                    vertical: 8.h,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20.r),
+                                                Text(
+                                                  'No skills listed',
+                                                  style: GoogleFonts.roboto(
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w600,
                                                     color:
-                                                        const Color(0xffDEDDEC),
+                                                        const Color(0xff666666),
                                                   ),
-                                                  child: Text(
-                                                    profile.skills.toString(),
-                                                    style: GoogleFonts.roboto(
-                                                      fontSize: 14.sp,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Color(0xFF1B1B1B),
-                                                    ),
-                                                  ),
-                                                )
-                                            else
-                                              Text(
-                                                'No skills listed',
-                                                style: GoogleFonts.roboto(
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  color:
-                                                      const Color(0xff666666),
                                                 ),
-                                              ),
                                           ],
                                         ),
                                       ),
@@ -984,14 +961,14 @@ class _MentorDetailPageState extends ConsumerState<MentorDetailPage> {
                                                             "N/A",
                                                         style:
                                                             GoogleFonts.roboto(
-                                                          fontSize: 14.sp,
+                                                          fontSize: 17.sp,
                                                           color: themeMode ==
                                                                   ThemeMode
                                                                       .light
                                                               ? Color(
                                                                   0xffDEDDEC)
                                                               : Color(
-                                                                  0xFF666666),
+                                                                  0xff9088F1),
                                                         ),
                                                       ),
                                                       // SizedBox(

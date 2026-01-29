@@ -389,6 +389,15 @@ class _CompanyDetailPageState extends ConsumerState<CompanyDetailPage> {
                                               : Color(0xFF666666),
                                         ),
                                       ),
+                                      Text(
+                                        review.fullName ?? '',
+                                        style: GoogleFonts.roboto(
+                                          fontSize: 16.sp,
+                                          color: themeMode == ThemeMode.light
+                                              ? Color(0xffDEDDEC)
+                                              : Color(0xff9088F1),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),

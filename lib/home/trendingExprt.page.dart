@@ -222,32 +222,39 @@ class _TrendingExprtPageState extends ConsumerState<TrendingExprtPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 20.h),
-                            Text(
-                              snap.skill?.title?.isNotEmpty == true
-                                  ? "Expert in ${snap.skill!.title}"
-                                  : "Experts",
-                              style: GoogleFonts.inter(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w600,
-                                // color: Color(0xFF1B1B1B),
-                                color: themeMode == ThemeMode.dark
-                                    ? const Color(0xFF1B1B1B)
-                                    : Colors.white,
+                            Center(
+                              child: Text(
+                                snap.skill?.title?.isNotEmpty == true
+                                    ? "Expert in ${snap.skill!.title}"
+                                    : "Experts",
+                                style: GoogleFonts.inter(
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w600,
+                                  // color: Color(0xFF1B1B1B),
+                                  color: themeMode == ThemeMode.dark
+                                      ? const Color(0xFF1B1B1B)
+                                      : Colors.white,
+                                ),
                               ),
                             ),
                             if (filteredExperts.isEmpty)
-                              Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 40.h),
-                                  child: Text(
-                                    "No experts found.",
-                                    style: GoogleFonts.inter(
-                                      fontSize: 16.sp,
-                                      color: themeMode == ThemeMode.dark
-                                          ? const Color(0xFF1B1B1B)
-                                          : Colors.white,
+                              Container(
+                                width: double.infinity,
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "No experts found.",
+                                      style: GoogleFonts.inter(
+                                        fontSize: 16.sp,
+                                        color: themeMode == ThemeMode.dark
+                                            ? const Color(0xFF1B1B1B)
+                                            : Colors.white,
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               )
                             else

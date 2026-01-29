@@ -686,6 +686,150 @@ class _ProfileCompletionWidgetState
                             ),
                             SizedBox(height: 20.h),
 
+                            // FormField<List<String>>(
+                            //   initialValue: selectedSkills,
+                            //   validator: (value) =>
+                            //       (value == null || value.isEmpty)
+                            //           ? "Required"
+                            //           : null,
+                            //   builder: (field) {
+                            //     return Padding(
+                            //       padding:
+                            //           EdgeInsets.symmetric(horizontal: 28.w),
+                            //       child: Column(
+                            //         crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //         children: [
+                            //           TypeAheadField<dynamic>(
+                            //             builder:
+                            //                 (context, controller, focusNode) {
+                            //               return TextField(
+                            //                 style: TextStyle(
+                            //                   color: themeMode == ThemeMode.dark
+                            //                       ? Colors.white
+                            //                       : Colors.black,
+                            //                 ),
+                            //                 controller: controller,
+                            //                 focusNode: focusNode,
+                            //                 decoration: InputDecoration(
+                            //                   hintText: "Select Skills",
+                            //                   hintStyle: TextStyle(
+                            //                     color:
+                            //                         themeMode == ThemeMode.dark
+                            //                             ? Colors.black
+                            //                             : Colors.white,
+                            //                   ),
+                            //                   // ... aapka existing decoration style ...
+                            //                   border: OutlineInputBorder(
+                            //                       borderRadius:
+                            //                           BorderRadius.circular(
+                            //                               40.r)),
+                            //                 ),
+                            //               );
+                            //             },
+
+                            //             /// 👇 YAHAN CHANGE KARNA HAI (FIXED)
+                            //             decorationBuilder: (context, child) {
+                            //               return Material(
+                            //                 color: themeMode == ThemeMode.dark
+                            //                     ? Colors.grey
+                            //                         .shade900 // ✅ DARK MODE background
+                            //                     : Colors
+                            //                         .white, // ✅ LIGHT MODE background
+                            //                 elevation: 4,
+                            //                 borderRadius:
+                            //                     BorderRadius.circular(12),
+                            //                 child: child,
+                            //               );
+                            //             },
+
+                            //             suggestionsCallback: (pattern) {
+                            //               final query = pattern.toLowerCase();
+                            //               return snapshot.data
+                            //                   .where((skill) =>
+                            //                       skill.title
+                            //                           .toLowerCase()
+                            //                           .contains(query) &&
+                            //                       !selectedSkills
+                            //                           .contains(skill.title))
+                            //                   .toList();
+                            //             },
+                            //             itemBuilder: (context, suggestion) {
+                            //               return ListTile(
+                            //                   tileColor:
+                            //                       themeMode == ThemeMode.dark
+                            //                           ? Colors.grey.shade900
+                            //                           : Colors.white,
+                            //                   title: Text(
+                            //                     suggestion.title,
+                            //                     style: TextStyle(
+                            //                       color: themeMode ==
+                            //                               ThemeMode.dark
+                            //                           ? Colors.white
+                            //                           : Colors.black,
+                            //                     ),
+                            //                   ));
+                            //             },
+                            //             onSelected: (suggestion) {
+                            //               setState(() {
+                            //                 // Duplicate check double safety ke liye
+                            //                 if (!selectedSkills
+                            //                     .contains(suggestion.title)) {
+                            //                   selectedSkills
+                            //                       .add(suggestion.title);
+                            //                   selectedSkillIds.add(
+                            //                       suggestion.id.toString());
+                            //                 }
+                            //               });
+
+                            //               field.didChange(selectedSkills);
+                            //             },
+                            //           ),
+                            //           SizedBox(height: 8.h),
+                            //           Wrap(
+                            //             spacing: 8,
+                            //             runSpacing: 8,
+                            //             children: selectedSkills
+                            //                 .asMap()
+                            //                 .entries
+                            //                 .map((entry) {
+                            //               int index = entry.key;
+                            //               String name = entry.value;
+
+                            //               return Chip(
+                            //                 deleteIconColor:
+                            //                     themeMode == ThemeMode.dark
+                            //                         ? Colors.black
+                            //                         : Colors.white,
+                            //                 backgroundColor:
+                            //                     themeMode == ThemeMode.dark
+                            //                         ? Colors.white
+                            //                         : Colors.black,
+                            //                 label: Text(
+                            //                   name,
+                            //                   style: GoogleFonts.roboto(
+                            //                     color:
+                            //                         themeMode == ThemeMode.dark
+                            //                             ? Colors.black
+                            //                             : Colors.white,
+                            //                   ),
+                            //                 ),
+                            //                 onDeleted: () {
+                            //                   setState(() {
+                            //                     selectedSkills.removeAt(index);
+                            //                     selectedSkillIds
+                            //                         .removeAt(index);
+                            //                   });
+                            //                   field.didChange(selectedSkills);
+                            //                 },
+                            //               );
+                            //             }).toList(),
+                            //           )
+                            //         ],
+                            //       ),
+                            //     );
+                            //   },
+                            // ),
                             FormField<List<String>>(
                               initialValue: selectedSkills,
                               validator: (value) =>
@@ -693,6 +837,18 @@ class _ProfileCompletionWidgetState
                                       ? "Required"
                                       : null,
                               builder: (field) {
+                                // Variable check karne ke bajaye seedha context se pucho
+                                bool isDarkMode =
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark;
+
+                                // Explicit colors define karo
+                                Color suggestionBg = isDarkMode
+                                    ? Colors.grey.shade900
+                                    : Colors.white;
+                                Color suggestionText =
+                                    isDarkMode ? Colors.white : Colors.black;
+
                                 return Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 28.w),
@@ -704,20 +860,31 @@ class _ProfileCompletionWidgetState
                                         builder:
                                             (context, controller, focusNode) {
                                           return TextField(
-                                            style:
-                                                TextStyle(color: Colors.black),
+                                            style: TextStyle(
+                                                color: suggestionText),
                                             controller: controller,
                                             focusNode: focusNode,
                                             decoration: InputDecoration(
                                               hintText: "Select Skills",
                                               hintStyle: TextStyle(
-                                                  color: Colors.black),
-                                              // ... aapka existing decoration style ...
+                                                  color: isDarkMode
+                                                      ? Colors.white70
+                                                      : Colors.black54),
                                               border: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           40.r)),
                                             ),
+                                          );
+                                        },
+                                        decorationBuilder: (context, child) {
+                                          return Material(
+                                            elevation: 4,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            color:
+                                                suggestionBg, // Safed background in light mode
+                                            child: child,
                                           );
                                         },
                                         suggestionsCallback: (pattern) {
@@ -732,12 +899,20 @@ class _ProfileCompletionWidgetState
                                               .toList();
                                         },
                                         itemBuilder: (context, suggestion) {
-                                          return ListTile(
-                                              title: Text(suggestion.title));
+                                          // ListTile ke bajaye Container use karo color lock karne ke liye
+                                          return Container(
+                                            color: suggestionBg,
+                                            child: ListTile(
+                                              title: Text(
+                                                suggestion.title,
+                                                style: TextStyle(
+                                                    color: suggestionText),
+                                              ),
+                                            ),
+                                          );
                                         },
                                         onSelected: (suggestion) {
                                           setState(() {
-                                            // Duplicate check double safety ke liye
                                             if (!selectedSkills
                                                 .contains(suggestion.title)) {
                                               selectedSkills
@@ -746,7 +921,6 @@ class _ProfileCompletionWidgetState
                                                   suggestion.id.toString());
                                             }
                                           });
-
                                           field.didChange(selectedSkills);
                                         },
                                       ),
@@ -760,9 +934,20 @@ class _ProfileCompletionWidgetState
                                             .map((entry) {
                                           int index = entry.key;
                                           String name = entry.value;
-
                                           return Chip(
-                                            label: Text(name),
+                                            deleteIconColor: isDarkMode
+                                                ? Colors.black
+                                                : Colors.white,
+                                            backgroundColor: isDarkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                            label: Text(
+                                              name,
+                                              style: GoogleFonts.roboto(
+                                                  color: isDarkMode
+                                                      ? Colors.black
+                                                      : Colors.white),
+                                            ),
                                             onDeleted: () {
                                               setState(() {
                                                 selectedSkills.removeAt(index);
@@ -779,131 +964,6 @@ class _ProfileCompletionWidgetState
                                 );
                               },
                             ),
-
-                            // FormField<List<String>>(
-                            //   initialValue: selectedSkills,
-                            //   validator: (value) =>
-                            //       (value == null || value.isEmpty)
-                            //           ? "Required"
-                            //           : null,
-                            //   builder: (field) {
-                            //     return Padding(
-                            //       padding:
-                            //           EdgeInsets.symmetric(horizontal: 28.w),
-                            //       child: Column(
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           TypeAheadField<dynamic>(
-                            //             // Assume yeh typeahead_flutter package se hai
-                            //             builder:
-                            //                 (context, controller, focusNode) {
-                            //               return TextField(
-                            //                 controller: controller,
-                            //                 focusNode: focusNode,
-                            //                 decoration: InputDecoration(
-                            //                   hintText: "Select Skills",
-                            //                   errorText: field.hasError
-                            //                       ? field.errorText
-                            //                       : null,
-                            //                   border: OutlineInputBorder(
-                            //                     borderRadius:
-                            //                         BorderRadius.circular(40.r),
-                            //                   ),
-                            //                 ),
-                            //               );
-                            //             },
-                            //             suggestionsCallback: (pattern) async {
-                            //               // Async bana diya agar FutureBuilder hai
-                            //               if (pattern.isEmpty) return [];
-                            //               final query = pattern.toLowerCase();
-                            //               // Assume snapshot.data yahan available hai (FutureBuilder se)
-                            //               return snapshot.data
-                            //                       ?.where((skill) =>
-                            //                           skill.title
-                            //                               .toLowerCase()
-                            //                               .contains(query) &&
-                            //                           !selectedSkills.contains(
-                            //                               skill.title))
-                            //                       .toList() ??
-                            //                   [];
-                            //             },
-                            //             itemBuilder: (context, suggestion) {
-                            //               return ListTile(
-                            //                   title: Text(suggestion.title));
-                            //             },
-                            //             onSelected: (suggestion) {
-                            //               // Fix: Spread operator se new list banao, old ko preserve karo
-                            //               setState(() {
-                            //                 if (!selectedSkills
-                            //                     .contains(suggestion.title)) {
-                            //                   selectedSkills = [
-                            //                     ...selectedSkills,
-                            //                     suggestion.title
-                            //                   ];
-                            //                   selectedSkillIds = [
-                            //                     ...selectedSkillIds,
-                            //                     suggestion.id.toString()
-                            //                   ];
-                            //                   log('Added: ${suggestion.title} | Total Skills: ${selectedSkills.length}'); // Debug
-                            //                 }
-                            //               });
-                            //               field.didChange(selectedSkills);
-                            //               // Controller clear to avoid text lingering
-                            //               // controller.text = '';
-                            //               // controller.clear();
-                            //             },
-                            //           ),
-                            //           SizedBox(height: 8.h),
-                            //           Wrap(
-                            //             spacing: 8,
-                            //             runSpacing: 8,
-                            //             children: selectedSkills
-                            //                 .asMap()
-                            //                 .entries
-                            //                 .map((entry) {
-                            //               final index = entry.key;
-                            //               final name = entry.value;
-                            //               return Chip(
-                            //                 key: ValueKey(
-                            //                     '$name-$index'), // Better key for rebuild
-                            //                 label: Text(name,
-                            //                     style: TextStyle(fontSize: 12)),
-                            //                 onDeleted: () {
-                            //                   setState(() {
-                            //                     // Spread se remove karo by index
-                            //                     selectedSkills = selectedSkills
-                            //                         .where((i) => i != index)
-                            //                         .toList();
-                            //                     selectedSkillIds =
-                            //                         selectedSkillIds
-                            //                             .where(
-                            //                                 (i) => i != index)
-                            //                             .toList();
-                            //                     print(
-                            //                         'Removed: $name | Remaining: ${selectedSkills.length}'); // Debug
-                            //                   });
-                            //                   field.didChange(selectedSkills);
-                            //                 },
-                            //               );
-                            //             }).toList(),
-                            //           ),
-                            //           if (field.hasError)
-                            //             Padding(
-                            //               padding: const EdgeInsets.only(
-                            //                   top: 5, left: 12),
-                            //               child: Text(
-                            //                 field.errorText ?? "",
-                            //                 style: TextStyle(
-                            //                     color: Colors.red,
-                            //                     fontSize: 12),
-                            //               ),
-                            //             ),
-                            //         ],
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
                             if (userType == "Mentor" ||
                                 userType == "Professional") ...[
                               Container(
@@ -1274,11 +1334,17 @@ class _ProfileCompletionWidgetState
                                 onSaved: (_) => addInterest(),
                                 decoration: InputDecoration(
                                   hintText: "Add Interest",
-                                  helperStyle: TextStyle(color: Colors.black),
+                                  hintStyle: TextStyle(
+                                    color: themeMode == ThemeMode.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       Icons.add,
-                                      color: Colors.black,
+                                      color: themeMode == ThemeMode.dark
+                                          ? Colors.black
+                                          : Colors.white,
                                     ),
                                     onPressed: addInterest,
                                   ),
@@ -1327,8 +1393,24 @@ class _ProfileCompletionWidgetState
                                   runSpacing: 8,
                                   children: interests.map((item) {
                                     return Chip(
-                                      label: Text(item),
-                                      deleteIcon: Icon(Icons.close),
+                                      backgroundColor:
+                                          themeMode == ThemeMode.dark
+                                              ? Colors.white
+                                              : Colors.black,
+                                      label: Text(
+                                        item,
+                                        style: TextStyle(
+                                          color: themeMode == ThemeMode.dark
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                      deleteIcon: Icon(
+                                        Icons.close,
+                                        color: themeMode == ThemeMode.dark
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
                                       onDeleted: () {
                                         setState(() {
                                           interests.remove(item);
@@ -1425,7 +1507,7 @@ class _ProfileCompletionWidgetState
                               label: 'About',
                               validator: (value) =>
                                   value!.isEmpty ? 'About is required' : null,
-                            ),*//*
+                            ),*/ /*
 
 
                             SizedBox(
@@ -1850,10 +1932,6 @@ class RegisterField extends ConsumerWidget {
 }
 */
 
-
-
-
-
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -1888,10 +1966,12 @@ class ProfileCompletionWidget extends ConsumerStatefulWidget {
   const ProfileCompletionWidget(this.data, {super.key});
 
   @override
-  ConsumerState<ProfileCompletionWidget> createState() => _ProfileCompletionWidgetState();
+  ConsumerState<ProfileCompletionWidget> createState() =>
+      _ProfileCompletionWidgetState();
 }
 
-class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidget> {
+class _ProfileCompletionWidgetState
+    extends ConsumerState<ProfileCompletionWidget> {
   final _formKey = GlobalKey<FormState>();
 
   final fullNameController = TextEditingController();
@@ -1923,7 +2003,13 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
   List<String> selectedSkills = [];
   List<String> selectedSkillIds = [];
 
-  List<String> qualificationList = ["10th", "12th", "Diploma", "graduate", "Postgraduate"];
+  List<String> qualificationList = [
+    "10th",
+    "12th",
+    "Diploma",
+    "graduate",
+    "Postgraduate"
+  ];
   List<String> genderList = ["Male", "Female", "Other"];
   List<String> interests = [];
 
@@ -1960,9 +2046,6 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
     super.dispose();
   }
 
-
-
-
   Future pickImageFromCamera() async {
     var status = await Permission.camera.request();
     if (status.isGranted) {
@@ -1985,7 +2068,6 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
       Fluttertoast.showToast(msg: "Camera permission denied");
     }
   }
-
 
   Future pickImageFromCamera1() async {
     var status = await Permission.camera.request();
@@ -2057,7 +2139,8 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
         quality: 60,
       );
       setState(() {
-        _image = compressed != null ? File(compressed.path) : File(pickedFile.path);
+        _image =
+            compressed != null ? File(compressed.path) : File(pickedFile.path);
       });
     }
   }
@@ -2071,7 +2154,8 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
         quality: 60,
       );
       setState(() {
-        _image1 = compressed != null ? File(compressed.path) : File(pickedFile.path);
+        _image1 =
+            compressed != null ? File(compressed.path) : File(pickedFile.path);
       });
     }
   }
@@ -2392,10 +2476,12 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                           child: Container(
                             width: 40.w,
                             height: 40.h,
-                            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle, color: Colors.white),
                             child: const Padding(
                               padding: EdgeInsets.only(left: 10),
-                              child: Icon(Icons.arrow_back_ios, color: Colors.black),
+                              child: Icon(Icons.arrow_back_ios,
+                                  color: Colors.black),
                             ),
                           ),
                         ),
@@ -2418,7 +2504,9 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                 child: SingleChildScrollView(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: themeMode == ThemeMode.dark ? Colors.white : const Color(0xFF1B1B1B),
+                      color: themeMode == ThemeMode.dark
+                          ? Colors.white
+                          : const Color(0xFF1B1B1B),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30.sp),
                         topRight: Radius.circular(30.sp),
@@ -2435,7 +2523,9 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                               type: TextInputType.name,
                               controller: fullNameController,
                               label: 'Full Name',
-                              validator: (value) => value!.isEmpty ? 'Full Name is required' : null,
+                              validator: (value) => value!.isEmpty
+                                  ? 'Full Name is required'
+                                  : null,
                             ),
                             SizedBox(height: 20.h),
                             Row(
@@ -2448,7 +2538,9 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                   style: GoogleFonts.roboto(
                                     fontSize: 13.w,
                                     fontWeight: FontWeight.w400,
-                                    color: themeMode == ThemeMode.dark ? const Color(0xFF4D4D4D) : Colors.white,
+                                    color: themeMode == ThemeMode.dark
+                                        ? const Color(0xFF4D4D4D)
+                                        : Colors.white,
                                   ),
                                 ),
                               ],
@@ -2474,23 +2566,31 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                       child: Center(
                                         child: Text(
                                           'Choose File',
-                                          style: GoogleFonts.roboto(color: Colors.white),
+                                          style: GoogleFonts.roboto(
+                                              color: Colors.white),
                                         ),
                                       ),
                                     ),
                                   ),
                                   Expanded(
                                     child: resumeFile != null
-                                        ? _buildFilePreview(resumeFile!.path.split('/').last)
-                                        : (resume != null && resume!.trim().isNotEmpty)
-                                        ? _buildFilePreview(resume!.split('/').last.split('?').first)
-                                        : Padding(
-                                      padding: EdgeInsets.all(8.w),
-                                      child: Text(
-                                        'Upload Resume +',
-                                        style: const TextStyle(color: Color(0xFF1B1B1B)),
-                                      ),
-                                    ),
+                                        ? _buildFilePreview(
+                                            resumeFile!.path.split('/').last)
+                                        : (resume != null &&
+                                                resume!.trim().isNotEmpty)
+                                            ? _buildFilePreview(resume!
+                                                .split('/')
+                                                .last
+                                                .split('?')
+                                                .first)
+                                            : Padding(
+                                                padding: EdgeInsets.all(8.w),
+                                                child: Text(
+                                                  'Upload Resume +',
+                                                  style: const TextStyle(
+                                                      color: Color(0xFF1B1B1B)),
+                                                ),
+                                              ),
                                   ),
                                 ],
                               ),
@@ -2503,34 +2603,38 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                             FormField<List<String>>(
                               initialValue: selectedSkills,
                               validator: (value) =>
-                              (value == null || value.isEmpty)
-                                  ? "Required"
-                                  : null,
+                                  (value == null || value.isEmpty)
+                                      ? "Required"
+                                      : null,
                               builder: (field) {
                                 return Padding(
                                   padding:
-                                  EdgeInsets.symmetric(horizontal: 28.w),
+                                      EdgeInsets.symmetric(horizontal: 28.w),
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       TypeAheadField<dynamic>(
                                         builder:
                                             (context, controller, focusNode) {
                                           return TextField(
                                             style:
-                                            TextStyle(color: Colors.black),
+                                                TextStyle(color: Colors.black),
                                             controller: controller,
                                             focusNode: focusNode,
                                             decoration: InputDecoration(
                                               hintText: "Select Skills",
                                               hintStyle: TextStyle(
-                                                  color: Colors.black),
+                                                color:
+                                                    themeMode == ThemeMode.dark
+                                                        ? Colors.black
+                                                        : Colors.white,
+                                              ),
                                               // ... aapka existing decoration style ...
                                               border: OutlineInputBorder(
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      40.r)),
+                                                      BorderRadius.circular(
+                                                          40.r)),
                                             ),
                                           );
                                         },
@@ -2538,16 +2642,29 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                           final query = pattern.toLowerCase();
                                           return snapshot.data
                                               .where((skill) =>
-                                          skill.title
-                                              .toLowerCase()
-                                              .contains(query) &&
-                                              !selectedSkills
-                                                  .contains(skill.title))
+                                                  skill.title
+                                                      .toLowerCase()
+                                                      .contains(query) &&
+                                                  !selectedSkills
+                                                      .contains(skill.title))
                                               .toList();
                                         },
                                         itemBuilder: (context, suggestion) {
                                           return ListTile(
-                                              title: Text(suggestion.title));
+                                              dense: true,
+                                              tileColor:
+                                                  themeMode == ThemeMode.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                              title: Text(
+                                                suggestion.title,
+                                                style: TextStyle(
+                                                  color: themeMode ==
+                                                          ThemeMode.dark
+                                                      ? Colors.black
+                                                      : Colors.white,
+                                                ),
+                                              ));
                                         },
                                         onSelected: (suggestion) {
                                           setState(() {
@@ -2576,7 +2693,23 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                           String name = entry.value;
 
                                           return Chip(
-                                            label: Text(name),
+                                            deleteIconColor:
+                                                themeMode == ThemeMode.dark
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                            backgroundColor:
+                                                themeMode == ThemeMode.dark
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                            label: Text(
+                                              name,
+                                              style: TextStyle(
+                                                color:
+                                                    themeMode == ThemeMode.dark
+                                                        ? Colors.black
+                                                        : Colors.white,
+                                              ),
+                                            ),
                                             onDeleted: () {
                                               setState(() {
                                                 selectedSkills.removeAt(index);
@@ -2594,8 +2727,6 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                               },
                             ),
 
-
-
                             if (userType == "Mentor" ||
                                 userType == "Professional") ...[
                               Container(
@@ -2608,12 +2739,12 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                   value: qualification == null
                                       ? null
                                       : (qualificationList
-                                      .where((item) =>
-                                  item.toLowerCase() ==
-                                      qualification!.toLowerCase())
-                                      .isNotEmpty
-                                      ? qualification
-                                      : null),
+                                              .where((item) =>
+                                                  item.toLowerCase() ==
+                                                  qualification!.toLowerCase())
+                                              .isNotEmpty
+                                          ? qualification
+                                          : null),
                                   decoration: InputDecoration(
                                     labelText: 'Highest Qualification',
                                     labelStyle: GoogleFonts.roboto(
@@ -2626,35 +2757,35 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius:
-                                      BorderRadius.circular(30.sp),
+                                          BorderRadius.circular(30.sp),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius:
-                                      BorderRadius.circular(30.sp),
+                                          BorderRadius.circular(30.sp),
                                       borderSide:
-                                      const BorderSide(color: Colors.grey),
+                                          const BorderSide(color: Colors.grey),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius:
-                                      BorderRadius.circular(30.sp),
+                                          BorderRadius.circular(30.sp),
                                       borderSide: const BorderSide(
                                           color: Color(0xff9088F1)),
                                     ),
                                   ),
                                   items: qualificationList
                                       .map((qualification) => DropdownMenuItem(
-                                    value: qualification,
-                                    child: Text(
-                                      qualification,
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 14.w,
-                                        color:
-                                        themeMode == ThemeMode.dark
-                                            ? Color(0xFF4D4D4D)
-                                            : Colors.white,
-                                      ),
-                                    ),
-                                  ))
+                                            value: qualification,
+                                            child: Text(
+                                              qualification,
+                                              style: GoogleFonts.roboto(
+                                                fontSize: 14.w,
+                                                color:
+                                                    themeMode == ThemeMode.dark
+                                                        ? Color(0xFF4D4D4D)
+                                                        : Colors.white,
+                                              ),
+                                            ),
+                                          ))
                                       .toList(),
                                   onChanged: (value) {
                                     setState(() {
@@ -2713,12 +2844,12 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                   value: qualification == null
                                       ? null
                                       : (qualificationList
-                                      .where((item) =>
-                                  item.toLowerCase() ==
-                                      qualification!.toLowerCase())
-                                      .isNotEmpty
-                                      ? qualification
-                                      : null),
+                                              .where((item) =>
+                                                  item.toLowerCase() ==
+                                                  qualification!.toLowerCase())
+                                              .isNotEmpty
+                                          ? qualification
+                                          : null),
                                   decoration: InputDecoration(
                                     labelText: 'Highest Qualification',
                                     labelStyle: GoogleFonts.roboto(
@@ -2731,35 +2862,35 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius:
-                                      BorderRadius.circular(30.sp),
+                                          BorderRadius.circular(30.sp),
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius:
-                                      BorderRadius.circular(30.sp),
+                                          BorderRadius.circular(30.sp),
                                       borderSide:
-                                      const BorderSide(color: Colors.grey),
+                                          const BorderSide(color: Colors.grey),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius:
-                                      BorderRadius.circular(30.sp),
+                                          BorderRadius.circular(30.sp),
                                       borderSide: const BorderSide(
                                           color: Color(0xff9088F1)),
                                     ),
                                   ),
                                   items: qualificationList
                                       .map((qualification) => DropdownMenuItem(
-                                    value: qualification,
-                                    child: Text(
-                                      qualification,
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 14.w,
-                                        color:
-                                        themeMode == ThemeMode.dark
-                                            ? Color(0xFF4D4D4D)
-                                            : Colors.white,
-                                      ),
-                                    ),
-                                  ))
+                                            value: qualification,
+                                            child: Text(
+                                              qualification,
+                                              style: GoogleFonts.roboto(
+                                                fontSize: 14.w,
+                                                color:
+                                                    themeMode == ThemeMode.dark
+                                                        ? Color(0xFF4D4D4D)
+                                                        : Colors.white,
+                                              ),
+                                            ),
+                                          ))
                                       .toList(),
                                   onChanged: (value) {
                                     setState(() {
@@ -2800,11 +2931,11 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                 value: gender == null
                                     ? null
                                     : genderList.firstWhere(
-                                      (item) =>
-                                  item.toLowerCase() ==
-                                      gender!.toLowerCase(),
-                                  orElse: () => genderList[0],
-                                ),
+                                        (item) =>
+                                            item.toLowerCase() ==
+                                            gender!.toLowerCase(),
+                                        orElse: () => genderList[0],
+                                      ),
 
                                 decoration: InputDecoration(
                                   labelText: 'Select Gender',
@@ -2822,7 +2953,7 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.sp),
                                     borderSide:
-                                    const BorderSide(color: Colors.grey),
+                                        const BorderSide(color: Colors.grey),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(30.sp),
@@ -2832,17 +2963,17 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                 ),
                                 items: genderList
                                     .map((gender) => DropdownMenuItem(
-                                  value: gender,
-                                  child: Text(
-                                    gender,
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 14.w,
-                                      color: themeMode == ThemeMode.dark
-                                          ? Color(0xFF4D4D4D)
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                ))
+                                          value: gender,
+                                          child: Text(
+                                            gender,
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 14.w,
+                                              color: themeMode == ThemeMode.dark
+                                                  ? Color(0xFF4D4D4D)
+                                                  : Colors.white,
+                                            ),
+                                          ),
+                                        ))
                                     .toList(),
                                 onChanged: (value) {
                                   setState(() {
@@ -2850,7 +2981,7 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                   });
                                 },
                                 validator: (value) =>
-                                value == null ? 'gender is required' : null,
+                                    value == null ? 'gender is required' : null,
                               ),
                             ),
                             Padding(
@@ -2889,19 +3020,19 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                         borderSide: const BorderSide(
                                             color: Colors.grey),
                                         borderRadius:
-                                        BorderRadius.circular(40.r),
+                                            BorderRadius.circular(40.r),
                                       ),
                                       border: OutlineInputBorder(
                                         borderSide: const BorderSide(
                                             color: Colors.grey),
                                         borderRadius:
-                                        BorderRadius.circular(40.r),
+                                            BorderRadius.circular(40.r),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(
                                             color: Colors.grey),
                                         borderRadius:
-                                        BorderRadius.circular(40.r),
+                                            BorderRadius.circular(40.r),
                                       ),
                                       prefixIcon: Icon(
                                         Icons.date_range_outlined,
@@ -2966,11 +3097,17 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                 onSaved: (_) => addInterest(),
                                 decoration: InputDecoration(
                                   hintText: "Add Interest",
-                                  helperStyle: TextStyle(color: Colors.black),
+                                  hintStyle: TextStyle(
+                                    color: themeMode == ThemeMode.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       Icons.add,
-                                      color: Colors.black,
+                                      color: themeMode == ThemeMode.dark
+                                          ? Colors.black
+                                          : Colors.white,
                                     ),
                                     onPressed: addInterest,
                                   ),
@@ -3013,14 +3150,30 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                               alignment: Alignment.centerLeft,
                               child: Padding(
                                 padding:
-                                EdgeInsets.only(left: 25.w, right: 25.w),
+                                    EdgeInsets.only(left: 28.w, right: 28.w),
                                 child: Wrap(
                                   spacing: 8,
                                   runSpacing: 8,
                                   children: interests.map((item) {
                                     return Chip(
-                                      label: Text(item),
-                                      deleteIcon: Icon(Icons.close),
+                                      backgroundColor:
+                                          themeMode == ThemeMode.dark
+                                              ? Colors.white
+                                              : Colors.black,
+                                      label: Text(
+                                        item,
+                                        style: TextStyle(
+                                          color: themeMode == ThemeMode.dark
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                      deleteIcon: Icon(
+                                        Icons.close,
+                                        color: themeMode == ThemeMode.dark
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
                                       onDeleted: () {
                                         setState(() {
                                           interests.remove(item);
@@ -3061,24 +3214,24 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                     ],
                                     decoration: InputDecoration(
                                       counterText:
-                                      '', // ← Yeh line add kar do (empty string)
+                                          '', // ← Yeh line add kar do (empty string)
                                       hintText:
-                                      "Tell us about yourself (max 100 words)",
+                                          "Tell us about yourself (max 100 words)",
                                       hintStyle: GoogleFonts.roboto(
                                           color: Colors.grey),
                                       border: OutlineInputBorder(
                                         borderRadius:
-                                        BorderRadius.circular(30.sp),
+                                            BorderRadius.circular(30.sp),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius:
-                                        BorderRadius.circular(30.sp),
+                                            BorderRadius.circular(30.sp),
                                         borderSide: const BorderSide(
                                             color: Colors.grey),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius:
-                                        BorderRadius.circular(30.sp),
+                                            BorderRadius.circular(30.sp),
                                         borderSide: const BorderSide(
                                             color: Color(0xff9088F1)),
                                       ),
@@ -3109,7 +3262,6 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                 ],
                               ),
                             ),
-
 
                             SizedBox(
                               height: 10.h,
@@ -3145,102 +3297,102 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                       border: Border.all(color: Colors.grey)),
                                   child: _image != null
                                       ? Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius:
-                                        BorderRadius.circular(20.r),
-                                        child: Image.file(
-                                          _image!,
-                                          fit: BoxFit.cover,
-                                          width: 360.w,
-                                          height: 250.h,
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: IconButton(
-                                            style: IconButton.styleFrom(
-                                                backgroundColor:
-                                                Color(0xFFDCF881)),
-                                            onPressed: () {
-                                              showImage();
-                                            },
-                                            icon: Icon(Icons.edit,
-                                                color:
-                                                Color(0xFF1B1B1B))),
-                                      )
-                                    ],
-                                  )
-                                      : (_networkImage != null &&
-                                      _networkImage!.isNotEmpty
-                                      ? Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            20.r),
-                                        child: Image.network(
-                                          _networkImage!,
-                                          fit: BoxFit.cover,
-                                          width: 360.w,
-                                          height: 250.h,
-                                          errorBuilder: (context,
-                                              error,
-                                              stackTrace) =>
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .center,
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .center,
-                                                children: [
-                                                  Icon(
-                                                    Icons.upload_sharp,
-                                                    color:
-                                                    Color(0xff9088F1),
-                                                    size: 30.sp,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10.h,
-                                                  ),
-                                                ],
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.r),
+                                              child: Image.file(
+                                                _image!,
+                                                fit: BoxFit.cover,
+                                                width: 360.w,
+                                                height: 250.h,
                                               ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment:
-                                        Alignment.bottomRight,
-                                        child: IconButton(
-                                            style: IconButton.styleFrom(
-                                                backgroundColor:
-                                                Color(
-                                                    0xFFA8E6CF)),
-                                            onPressed: () {
-                                              showImage();
-                                            },
-                                            icon: Icon(Icons.edit,
-                                                color: Color(
-                                                    0xFF1B1B1B))),
-                                      )
-                                    ],
-                                  )
-                                      : Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.upload_sharp,
-                                        color: Color(0xff9088F1),
-                                        size: 30.sp,
-                                      ),
-                                      SizedBox(
-                                        height: 10.h,
-                                      ),
-                                    ],
-                                  )),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: IconButton(
+                                                  style: IconButton.styleFrom(
+                                                      backgroundColor:
+                                                          Color(0xFFDCF881)),
+                                                  onPressed: () {
+                                                    showImage();
+                                                  },
+                                                  icon: Icon(Icons.edit,
+                                                      color:
+                                                          Color(0xFF1B1B1B))),
+                                            )
+                                          ],
+                                        )
+                                      : (_networkImage != null &&
+                                              _networkImage!.isNotEmpty
+                                          ? Stack(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.r),
+                                                  child: Image.network(
+                                                    _networkImage!,
+                                                    fit: BoxFit.cover,
+                                                    width: 360.w,
+                                                    height: 250.h,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.upload_sharp,
+                                                          color:
+                                                              Color(0xff9088F1),
+                                                          size: 30.sp,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10.h,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  child: IconButton(
+                                                      style: IconButton.styleFrom(
+                                                          backgroundColor:
+                                                              Color(
+                                                                  0xFFDCF881)),
+                                                      onPressed: () {
+                                                        showImage();
+                                                      },
+                                                      icon: Icon(Icons.edit,
+                                                          color: Color(
+                                                              0xFF1B1B1B))),
+                                                )
+                                              ],
+                                            )
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.upload_sharp,
+                                                  color: Color(0xff9088F1),
+                                                  size: 30.sp,
+                                                ),
+                                                SizedBox(
+                                                  height: 10.h,
+                                                ),
+                                              ],
+                                            )),
                                 ),
                               ),
                             ),
@@ -3280,102 +3432,102 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                       border: Border.all(color: Colors.grey)),
                                   child: _image1 != null
                                       ? Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius:
-                                        BorderRadius.circular(20.r),
-                                        child: Image.file(
-                                          _image1!,
-                                          fit: BoxFit.cover,
-                                          width: 360.w,
-                                          height: 250.h,
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: IconButton(
-                                            style: IconButton.styleFrom(
-                                                backgroundColor:
-                                                Color(0xFFDCF881)),
-                                            onPressed: () {
-                                              showImage1();
-                                            },
-                                            icon: Icon(Icons.edit,
-                                                color:
-                                                Color(0xFF1B1B1B))),
-                                      )
-                                    ],
-                                  )
-                                      : (_networkImage1 != null &&
-                                      _networkImage1!.isNotEmpty
-                                      ? Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            20.r),
-                                        child: Image.network(
-                                          _networkImage1!,
-                                          fit: BoxFit.cover,
-                                          width: 360.w,
-                                          height: 250.h,
-                                          errorBuilder: (context,
-                                              error,
-                                              stackTrace) =>
-                                              Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .center,
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .center,
-                                                children: [
-                                                  Icon(
-                                                    Icons.upload_sharp,
-                                                    color:
-                                                    Color(0xff9088F1),
-                                                    size: 30.sp,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10.h,
-                                                  ),
-                                                ],
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.r),
+                                              child: Image.file(
+                                                _image1!,
+                                                fit: BoxFit.cover,
+                                                width: 360.w,
+                                                height: 250.h,
                                               ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment:
-                                        Alignment.bottomRight,
-                                        child: IconButton(
-                                            style: IconButton.styleFrom(
-                                                backgroundColor:
-                                                Color(
-                                                    0xFFA8E6CF)),
-                                            onPressed: () {
-                                              showImage1();
-                                            },
-                                            icon: Icon(Icons.edit,
-                                                color: Color(
-                                                    0xFF1B1B1B))),
-                                      )
-                                    ],
-                                  )
-                                      : Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.upload_sharp,
-                                        color: Color(0xff9088F1),
-                                        size: 30.sp,
-                                      ),
-                                      SizedBox(
-                                        height: 10.h,
-                                      ),
-                                    ],
-                                  )),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: IconButton(
+                                                  style: IconButton.styleFrom(
+                                                      backgroundColor:
+                                                          Color(0xFFDCF881)),
+                                                  onPressed: () {
+                                                    showImage1();
+                                                  },
+                                                  icon: Icon(Icons.edit,
+                                                      color:
+                                                          Color(0xFF1B1B1B))),
+                                            )
+                                          ],
+                                        )
+                                      : (_networkImage1 != null &&
+                                              _networkImage1!.isNotEmpty
+                                          ? Stack(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.r),
+                                                  child: Image.network(
+                                                    _networkImage1!,
+                                                    fit: BoxFit.cover,
+                                                    width: 360.w,
+                                                    height: 250.h,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.upload_sharp,
+                                                          color:
+                                                              Color(0xff9088F1),
+                                                          size: 30.sp,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10.h,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  child: IconButton(
+                                                      style: IconButton.styleFrom(
+                                                          backgroundColor:
+                                                              Color(
+                                                                  0xFFDCF881)),
+                                                      onPressed: () {
+                                                        showImage1();
+                                                      },
+                                                      icon: Icon(Icons.edit,
+                                                          color: Color(
+                                                              0xFF1B1B1B))),
+                                                )
+                                              ],
+                                            )
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.upload_sharp,
+                                                  color: Color(0xff9088F1),
+                                                  size: 30.sp,
+                                                ),
+                                                SizedBox(
+                                                  height: 10.h,
+                                                ),
+                                              ],
+                                            )),
                                 ),
                               ),
                             ),
@@ -3505,22 +3657,21 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                             //   },
                             // ),
 
-
-
-
                             // end mein submit button
                             GestureDetector(
                               onTap: buttonLoder
                                   ? null
                                   : () {
-                                if (userType == "Mentor" || userType == "Professional") {
-                                  updateProfileMentor();
-                                } else {
-                                  updateProfile();
-                                }
-                              },
+                                      if (userType == "Mentor" ||
+                                          userType == "Professional") {
+                                        updateProfileMentor();
+                                      } else {
+                                        updateProfile();
+                                      }
+                                    },
                               child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 28.w, vertical: 10.h),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 28.w, vertical: 10.h),
                                 height: 52.h,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40.r),
@@ -3530,14 +3681,14 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                                   child: buttonLoder
                                       ? const CircularProgressIndicator()
                                       : Text(
-                                    "Submit Now",
-                                    style: GoogleFonts.roboto(
-                                      color: const Color(0xFF1B1B1B),
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: -0.4,
-                                      fontSize: 14.4.w,
-                                    ),
-                                  ),
+                                          "Submit Now",
+                                          style: GoogleFonts.roboto(
+                                            color: const Color(0xFF1B1B1B),
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: -0.4,
+                                            fontSize: 14.4.w,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ),
@@ -3549,10 +3700,12 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
                         log(stackTrace.toString());
                         return Center(child: Text(error.toString()));
                       },
-                      loading: () => const SizedBox(
-                        width: double.infinity,
-                        height: 300,
-                        child: Center(child: CircularProgressIndicator()),
+                      loading: () => SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                     ),
                   ),
@@ -3565,8 +3718,6 @@ class _ProfileCompletionWidgetState extends ConsumerState<ProfileCompletionWidge
     );
   }
 }
-
-
 
 class RegisterField extends ConsumerWidget {
   final TextInputType? type;
@@ -3621,7 +3772,7 @@ class RegisterField extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(40.r),
                 borderSide: BorderSide(
                   color:
-                  themeMode == ThemeMode.light ? Colors.white : Colors.grey,
+                      themeMode == ThemeMode.light ? Colors.white : Colors.grey,
                 ),
               ),
             ),
@@ -3633,9 +3784,6 @@ class RegisterField extends ConsumerWidget {
   }
 }
 
-
-
-
 class WordLimitInputFormatter extends TextInputFormatter {
   final int maxWords;
 
@@ -3643,9 +3791,9 @@ class WordLimitInputFormatter extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue,
-      ) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final words = newValue.text
         .trim()
         .split(RegExp(r'\s+'))

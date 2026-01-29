@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:educationapp/complete/complete.page.dart';
+import 'package:educationapp/coreFolder/Controller/getMentorReveiwController.dart';
 import 'package:educationapp/coreFolder/Controller/themeController.dart';
 import 'package:educationapp/coreFolder/Controller/userProfileController.dart';
 import 'package:educationapp/coreFolder/network/api.state.dart';
@@ -92,6 +93,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     var box = Hive.box('userdata');
+    var mentorId = box.get("userid");
     final userType = box.get("userType");
     final userProfileAsync = ref.watch(userProfileController);
     final themeMode = ref.watch(themeProvider);
@@ -935,6 +937,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     ),
                   ],
                 ),
+
+                if (userType != "Student") MentorReview(),
               ],
             ),
           );
@@ -1061,4 +1065,149 @@ Widget _buildLanguageSection({
       ],
     ),
   );
+}
+
+///////////////////////////  Mentor Review /////////////////////////////
+class MentorReview extends ConsumerWidget {
+  const MentorReview({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final box = Hive.box("userdata");
+    final mentorId = box.get("userid");
+    final getMentorReviewProvider =
+        ref.watch(getMentorReviewController(mentorId.toString()));
+    final themeMode = ref.watch(themeProvider);
+    return Padding(
+      padding: EdgeInsets.only(left: 20.w, right: 20.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Reviews & Ratings",
+            style: GoogleFonts.roboto(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: themeMode == ThemeMode.light
+                  ? Color(0xffDEDDEC)
+                  : Color(0xff9088F1),
+            ),
+          ),
+          SizedBox(
+            height: 15.h,
+          ),
+          getMentorReviewProvider.when(
+            data: (snp) {
+              if (snp.reviews!.isEmpty) {
+                return Center(
+                  child: Text(
+                    "No Review yet.",
+                    style: GoogleFonts.inter(
+                      fontSize: 16.sp,
+                      color: themeMode == ThemeMode.dark
+                          ? const Color(0xFF1B1B1B)
+                          : Colors.white,
+                    ),
+                  ),
+                );
+              }
+              // 👇 Take only top 5
+              final limitedReviews = snp.reviews!.take(5).toList();
+
+              return ListView.builder(
+                reverse: true,
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: limitedReviews.length,
+                itemBuilder: (context, index) {
+                  final review = limitedReviews[index];
+
+                  final double avg =
+                      double.tryParse(review.rating.toString() ?? "") ?? 0.0;
+                  final int rating = avg.clamp(0, 5).toInt();
+
+                  return InkWell(
+                    onTap: () {},
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: 16.w, right: 16.w, top: 16.h, bottom: 16.h),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.r),
+                        // color: Color(0xFFF1F2F6),
+                        color: themeMode == ThemeMode.dark
+                            ? Color(0xffF1F2F6)
+                            : Color(0xff9088F1),
+                      ),
+                      margin: EdgeInsets.only(
+                        bottom: 20.h,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              ...List.generate(
+                                rating,
+                                (indiex) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 20.0,
+                                ),
+                              ),
+                              ...List.generate(
+                                5 - rating, // Remaining stars (5 - filled stars)
+                                (i) => const Icon(
+                                  Icons.star_border, // Outlined star icon
+                                  color: Colors
+                                      .amber, // Use the same color for visual consistency
+                                  size: 20.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5.h),
+                          Text(
+                            review.description ?? '',
+                            style: GoogleFonts.roboto(
+                              fontSize: 16.sp,
+                              color: themeMode == ThemeMode.light
+                                  ? Color(0xffDEDDEC)
+                                  : Color(0xFF666666),
+                            ),
+                          ),
+                          Text(
+                            review.userName ?? "N/A",
+                            style: GoogleFonts.roboto(
+                              fontSize: 17.sp,
+                              color: themeMode == ThemeMode.light
+                                  ? Color(0xffDEDDEC)
+                                  : Color(0xff9088F1),
+                            ),
+                          ),
+                          // SizedBox(
+                          //   height: 10.h,
+                          // )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            error: (error, stackTrace) {
+              log(stackTrace.toString());
+              log(error.toString());
+              return Center(
+                child: Text(error.toString()),
+              );
+            },
+            loading: () => Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
