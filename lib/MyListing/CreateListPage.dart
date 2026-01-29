@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../coreFolder/Controller/getSkillProvider.dart';
 import '../coreFolder/Controller/themeController.dart';
 import '../coreFolder/Model/listingBodyModel.dart';
@@ -58,6 +57,10 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
   }) {
     final isDark = ref.read(themeProvider) == ThemeMode.dark;
     final textColor = isDark ? const Color(0xFF4D4D4D) : Colors.white;
+    final fillBgColor = isDark
+        ? const Color(0xFF1E1E1E) // dark mode bg
+        : const Color(0xFFF5F5F5); // light mode bg
+
     return InputDecoration(
       labelText: label,
       hintText: hint,
@@ -65,8 +68,6 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
       labelStyle: TextStyle(
           color: textColor, fontSize: 13.w, fontWeight: FontWeight.w400),
       contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
-      // filled: true,
-      // fillColor: isDark ? Colors.grey.shade900.withOpacity(0.3) : Colors.grey.shade100.withOpacity(0.5),
       errorStyle: TextStyle(
           color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12.sp),
       errorBorder: OutlineInputBorder(
@@ -211,12 +212,16 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
 
                                 itemBuilder: (context, suggestion) {
                                   return ListTile(
+                                    dense: true,
+                                    tileColor: themeMode == ThemeMode.dark
+                                        ? Colors.white
+                                        : Colors.black,
                                     title: Text(
                                       suggestion,
-                                      style: GoogleFonts.inter(
-                                        color: isDark
-                                            ? Colors.white
-                                            : Color(0xFF1B1B1B),
+                                      style: TextStyle(
+                                        color: themeMode == ThemeMode.dark
+                                            ? Colors.black
+                                            : Colors.white,
                                       ),
                                     ),
                                   );
@@ -242,17 +247,20 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                                 runSpacing: 8,
                                 children: selectedSubject.map((skill) {
                                   return Chip(
-                                    label: Text(skill,
-                                        style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white
-                                                : Color(0xFF1B1B1B))),
-                                    backgroundColor: isDark
-                                        ? Colors.grey.shade700
-                                        : Colors.grey.shade300,
-                                    deleteIconColor: isDark
+                                    label: Text(
+                                      skill,
+                                      style: TextStyle(
+                                        color: themeMode == ThemeMode.dark
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                    deleteIconColor: themeMode == ThemeMode.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                    backgroundColor: themeMode == ThemeMode.dark
                                         ? Colors.white
-                                        : Color(0xFF1B1B1B),
+                                        : Colors.black,
                                     onDeleted: () {
                                       setState(() {
                                         selectedSubject.remove(skill);
@@ -262,22 +270,16 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                                   );
                                 }).toList(),
                               ),
-
-                              // Show error text below chips if any
-                              // if (field.errorText != null)
-                              //   Padding(
-                              //     padding: EdgeInsets.only(top: 8.h, left: 12.w),
-                              //     child: Text(
-                              //       field.errorText!,
-                              //       style:  TextStyle(color: Colors.red, fontSize: 12.sp, fontWeight: FontWeight.bold),
-                              //     ),
-                              //   ),
+                              SizedBox(height: 10.h),
                             ],
                           );
                         },
                       ),
                       // All Dropdowns using same style
                       DropdownButtonFormField<String>(
+                        dropdownColor: themeMode == ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
                         value: qualification,
                         decoration:
                             commonInputDecoration(label: "Education / Level"),
@@ -288,7 +290,15 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                                 color: textColor)),
                         items: qualificationList.map((item) {
                           return DropdownMenuItem(
-                              value: item, child: Text(item));
+                              value: item,
+                              child: Text(
+                                item,
+                                style: TextStyle(
+                                  color: themeMode == ThemeMode.dark
+                                      ? Colors.black
+                                      : Colors.white,
+                                ),
+                              ));
                         }).toList(),
                         onChanged: (v) => setState(() => qualification = v),
                         validator: (v) => v == null ? "Required" : null,
@@ -334,6 +344,9 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
 
                       SizedBox(height: 20.h),
                       DropdownButtonFormField<String>(
+                        dropdownColor: themeMode == ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
                         value: gender,
                         decoration:
                             commonInputDecoration(label: "Gender Preference"),
@@ -345,7 +358,15 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                                 color: textColor)),
                         items: genderList
                             .map((item) => DropdownMenuItem(
-                                value: item, child: Text(item)))
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: TextStyle(
+                                    color: themeMode == ThemeMode.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
+                                )))
                             .toList(),
                         onChanged: (v) => setState(() => gender = v),
                         validator: (v) => v == null ? "Required" : null,
@@ -353,6 +374,9 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
 
                       SizedBox(height: 18.h),
                       DropdownButtonFormField<String>(
+                        dropdownColor: themeMode == ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
                         value: communicate,
                         decoration:
                             commonInputDecoration(label: "Communicate in"),
@@ -364,7 +388,15 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                                 color: textColor)),
                         items: communicateList
                             .map((item) => DropdownMenuItem(
-                                value: item, child: Text(item)))
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: TextStyle(
+                                    color: themeMode == ThemeMode.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
+                                )))
                             .toList(),
                         onChanged: (v) => setState(() => communicate = v),
                         validator: (v) => v == null ? "Required" : null,
@@ -372,6 +404,9 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
 
                       SizedBox(height: 18.h),
                       DropdownButtonFormField<String>(
+                        dropdownColor: themeMode == ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
                         value: mode,
                         decoration:
                             commonInputDecoration(label: "Teaching Mode"),
@@ -383,7 +418,15 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                                 color: textColor)),
                         items: modeList
                             .map((item) => DropdownMenuItem(
-                                value: item, child: Text(item.capitalize())))
+                                value: item,
+                                child: Text(
+                                  item.capitalize(),
+                                  style: TextStyle(
+                                    color: themeMode == ThemeMode.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
+                                )))
                             .toList(),
                         onChanged: (v) => setState(() => mode = v),
                         validator: (v) => v == null ? "Required" : null,
@@ -391,6 +434,9 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
 
                       SizedBox(height: 18.h),
                       DropdownButtonFormField<String>(
+                        dropdownColor: themeMode == ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
                         value: requires,
                         decoration: commonInputDecoration(label: "Requires"),
                         // dropdownColor: isDark ? Colors.grey.shade900 : Colors.white,
@@ -401,7 +447,15 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                                 color: textColor)),
                         items: requireList
                             .map((item) => DropdownMenuItem(
-                                value: item, child: Text(item)))
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: TextStyle(
+                                    color: themeMode == ThemeMode.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
+                                )))
                             .toList(),
                         onChanged: (v) => setState(() => requires = v),
                         validator: (v) => v == null ? "Required" : null,
@@ -411,6 +465,9 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                       budgetProvider.when(
                         data: (snap) {
                           return DropdownButtonFormField<String>(
+                            dropdownColor: themeMode == ThemeMode.dark
+                                ? Colors.white
+                                : Colors.black,
                             value: budget,
                             decoration: commonInputDecoration(label: "Budget"),
                             // dropdownColor: isDark ? Colors.grey.shade900 : Colors.white,
@@ -424,7 +481,15 @@ class _CreateListPageState extends ConsumerState<CreateListPage> {
                                   (double.tryParse(item.price ?? '0') ?? 0)
                                       .toInt();
                               return DropdownMenuItem(
-                                  value: item.price, child: Text("₹$price"));
+                                  value: item.price,
+                                  child: Text(
+                                    "₹$price",
+                                    style: TextStyle(
+                                      color: themeMode == ThemeMode.dark
+                                          ? Colors.black
+                                          : Colors.white,
+                                    ),
+                                  ));
                             }).toList(),
                             onChanged: (v) => setState(() => budget = v),
                             validator: (v) => v == null ? "Required" : null,
