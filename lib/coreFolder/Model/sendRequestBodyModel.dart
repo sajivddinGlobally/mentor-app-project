@@ -68,19 +68,22 @@ class ApplybodyModel {
   String? body;
   int? userId;
   int? studentIistsId;
+  int? coin;
 
   ApplybodyModel({
     this.title,
     this.body,
     this.userId,
     this.studentIistsId,
+    this.coin,
   });
 
   factory ApplybodyModel.fromJson(Map<String, dynamic> json) => ApplybodyModel(
         title: json["title"],
         body: json["body"],
         userId: json["user_id"],
-        studentIistsId: json['student_lists_id']
+        studentIistsId: json['student_lists_id'],
+      coin: json['coin']
       );
 
   Map<String, dynamic> toJson() => {
@@ -88,5 +91,6 @@ class ApplybodyModel {
         "body": body,
         "user_id": userId,
         "student_lists_id": studentIistsId,
+        "coin": coin,
       };
 }

@@ -319,6 +319,7 @@ Dio createDio() {
     ),
   );
 
+
   dio.interceptors.add(
     PrettyDioLogger(
       requestBody: true,
